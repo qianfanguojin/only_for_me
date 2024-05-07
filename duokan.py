@@ -336,24 +336,46 @@ class DuoKan:
 
     def download(self, cookies):
         url = "https://www.duokan.com/events/common_task_gift"
-        data = f"code=J18UK6YYAY&chances=17&{self.get_data(cookies=cookies)}&withid=1"
-        res = requests.post(
-            url=url, data=data, cookies=cookies, headers=self.headers
-        ).json()
-        return "下载任务: " + res.get("msg")
+        success_count = 0
+        while True:
+            data = f"code=J18UK6YYAY&chances=17&{self.get_data(cookies=cookies)}&withid=1"
+            res1 = requests.post(
+                url=url, data=data, cookies=cookies, headers=self.headers
+            ).json()
+            data = f"code=J18UK6YYAY&chances=0&{self.get_data(cookies=cookies)}&withid=1"
+            res2 = requests.post(
+                url=url, data=data, cookies=cookies, headers=self.headers
+            ).json()
+            if res1.get("result") == 0 or res2.get("result") == 0:
+                success_count += 1
+            else:
+                break
+
+        return f"下载任务: 完成 {success_count} 个"
 
     def task(self, cookies):
         success_count = 0
         url = "https://www.duokan.com/events/tasks_gift"
         for code in self.code_list:
             data = f"code={code}&chances=3&{self.get_data(cookies=cookies)}&withid=1"
-            res = requests.post(
+            res1 = requests.post(
                 url=url, data=data, cookies=cookies, headers=self.headers
             ).json()
-            if res.get("result") == 0:
+            data = f"code={code}&chances=10&{self.get_data(cookies=cookies)}&withid=1"
+            res2 = requests.post(
+                url=url, data=data, cookies=cookies, headers=self.headers
+            ).json()
+            if res1.get("result") == 0 or res2.get("result") == 0:
                 success_count += 1
         return f"其他任务: 完成 {success_count} 个"
-
+    # def other(self, cookies):
+    #     success_count = 0
+    #     url = "https://www.duokan.com/task/v2/user/claim"
+    #     data = f"task_id=1004&{self.get_data(cookies=cookies)}"
+    #     res1 = requests.post(
+    #         url=url, data=data, cookies=cookies, headers=self.headers
+    #     ).json()
+    #     return f"阅读任务: 完成 {success_count} 个"
     def main(self):
         msg_all = ""
         for check_item in self.check_items:
@@ -361,7 +383,7 @@ class DuoKan:
                 item.split("=")[0]: item.split("=")[1]
                 for item in check_item.get("cookie").split("; ")
             }
-            sign_msg = self.sign(cookies=cookie)
+            #sign_msg = self.sign(cookies=cookie)
             #free_msg = self.free(cookies=cookie)
             gift_msg = self.gift(cookies=cookie)
             add_draw_msg = self.add_draw(cookies=cookie)
@@ -369,8 +391,12 @@ class DuoKan:
             download_msg = self.download(cookies=cookie)
             task_msg = self.task(cookies=cookie)
             info_msg = self.info(cookies=cookie)
+            # msg = (
+            #     f"每日签到: {sign_msg}\n{free_msg}\n{gift_msg}\n"
+            #     f"{add_draw_msg}\n{draw_msg}\n{download_msg}\n{task_msg}\n{info_msg}"
+            # )
             msg = (
-                f"每日签到: {sign_msg}\n{free_msg}\n{gift_msg}\n"
+                f"每日签到: {gift_msg}\n"
                 f"{add_draw_msg}\n{draw_msg}\n{download_msg}\n{task_msg}\n{info_msg}"
             )
             msg_all += msg + "\n\n"
