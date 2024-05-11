@@ -5,7 +5,7 @@ new Env('多看阅读');
 """
 
 import time
-
+import os
 import requests
 
 class DuoKan:
@@ -234,13 +234,34 @@ class DuoKan:
             c = (c * 131 + ord(one)) % 65536
         return f"_t={t}&_c={c}"
 
+    #签到部分
     def sign(self, cookies):
-        url = "https://www.duokan.com/checkin/v0/checkin"
-        data = self.get_data(cookies=cookies)
-        res = requests.post(
-            url=url, data=data, cookies=cookies, headers=self.headers
+        success_coins = 0
+        url = "https://www.duokan.com/api/dk-user/checkin"
+        sign_data = self.get_data(cookies=cookies)
+        #1签到
+        #TODO: 待添加每次签到成功的豆子统计
+        sign_res = requests.post(
+            url=url, data=sign_data, cookies=cookies, headers=self.headers
         ).json()
-        return res.get("msg")
+
+        #2签到成功看视频
+        sign_video_check_data = f"code=EBTXJHUJS6&{self.get_data(cookies=cookies)}"
+        sign_video_check_res = requests.post(
+                url=url, data=sign_video_check_data, cookies=cookies, headers=self.headers
+        ).json()
+        coins = sign_video_check_res.get("chances")
+        while True:
+            sign_video_data = f"code=EBTXJHUJS6&chances=9&{self.get_data(cookies=cookies)}"
+            sign_video_res = requests.post(
+                url=url, data=sign_video_data, cookies=cookies, headers=self.headers
+            ).json()
+            if sign_video_res.get("result") != 0:
+                print(sign_video_res.get("msg"))
+                break
+            success_coins += coins
+        print(f"签到部分共得到书豆{success_coins}")
+        return ""
 
     def delay(self, date, cookies):
         url = "https://www.duokan.com/store/v0/award/coin/delay"
@@ -355,19 +376,36 @@ class DuoKan:
 
     def task(self, cookies):
         success_count = 0
+        success_coins = 0
         url = "https://www.duokan.com/events/tasks_gift"
+        #旧任务
         for code in self.code_list:
-            data = f"code={code}&chances=3&{self.get_data(cookies=cookies)}&withid=1"
-            res1 = requests.post(
+            while True:
+                data = f"code={code}&chances=3&{self.get_data(cookies=cookies)}&withid=1"
+                res = requests.post(
+                    url=url, data=data, cookies=cookies, headers=self.headers
+                ).json()
+                if res.get("result") != 0:
+                    print(res.get("msg"))
+                    break
+        #看小视频赚书豆
+        video_check_coins = 3
+        video_check_coins_count = 0
+        video_check_count = 0
+        while True:
+            data = f"code=A2AMBFHP6C&chances=10&{self.get_data(cookies=cookies)}"
+            res = requests.post(
                 url=url, data=data, cookies=cookies, headers=self.headers
             ).json()
-            data = f"code={code}&chances=10&{self.get_data(cookies=cookies)}&withid=1"
-            res2 = requests.post(
-                url=url, data=data, cookies=cookies, headers=self.headers
-            ).json()
-            if res1.get("result") == 0 or res2.get("result") == 0:
-                success_count += 1
-        return f"其他任务: 完成 {success_count} 个"
+            if res.get("result") != 0:
+                print(res.get("msg"))
+                break
+            video_check_coins_count += video_check_coins
+            video_check_count += 1
+        res_msg = f"其他任务: 完成 {success_count} 个。\n" \
+                  f"看视频任务{video_check_count}个，大约获得书豆 {video_check_coins_count} 个"
+        print(res_msg)
+        return res_msg
     # def other(self, cookies):
     #     success_count = 0
     #     url = "https://www.duokan.com/task/v2/user/claim"
