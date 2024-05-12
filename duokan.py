@@ -336,6 +336,7 @@ class DuoKan:
                     num += 30
                     success_count += 1
                     print("体验任务完成啦！豆子 +30")
+                time.sleep(2)
                 # else:
                 #     print(res.get("msg"), res.get("data"))
         msg = f"APP 体验试玩任务: 完成 {success_count} 个，获得 {num} 豆子\n"
