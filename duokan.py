@@ -240,6 +240,7 @@ class DuoKan:
         """
         签到部分
         """
+        print("1. 每日签到")
         url = "https://www.duokan.com/api/dk-user/checkin"
         sign_data = self.get_data(cookies=cookies)
         #1签到
@@ -258,8 +259,9 @@ class DuoKan:
         # ).json()
         sign_video_coins = 0
         sign_video_coins_per = 3
+        url = "https://www.duokan.com/events/video_gift"
         while True:
-            sign_video_data = f"code=EBTXJHUJS6&chances=9&{self.get_data(cookies=cookies)}"
+            sign_video_data = f"code=EBTXJHUJS6&chances=9"
             sign_video_res = requests.post(
                 url=url, data=sign_video_data, cookies=cookies, headers=self.headers
             ).json()
@@ -270,7 +272,7 @@ class DuoKan:
             time.sleep(5)
             sign_video_coins += sign_video_coins_per
             print(f"签到看广告视频，获得书豆{sign_video_coins_per}")
-        msg = f"签到部分共得到书豆{sign_video_coins + sign_coins}"
+        msg = f"签到部分共得到书豆{sign_video_coins + sign_coins}\n"
         print(msg)
         return msg
 
@@ -278,16 +280,17 @@ class DuoKan:
         """
         APP 下载任务
         """
+        print("2. APP 下载任务")
         url = "https://www.duokan.com/events/common_task_gift"
         success_count = 0
         coin = 30
         download_coins = 0
         while True:
-            data = f"code=J18UK6YYAY&chances=17&{self.get_data(cookies=cookies)}&withid=1"
+            data = f"code=J18UK6YYAY&chances=17"
             res1 = requests.post(
                 url=url, data=data, cookies=cookies, headers=self.headers
             ).json()
-            data = f"code=J18UK6YYAY&chances=0&{self.get_data(cookies=cookies)}&withid=1"
+            data = f"code=J18UK6YYAY&chances=0"
             res2 = requests.post(
                 url=url, data=data, cookies=cookies, headers=self.headers
             ).json()
@@ -303,13 +306,16 @@ class DuoKan:
             if res1.get("result") != 0 and res2.get("result") != 0:
                 break
             time.sleep(5)
-        msg = f"下载任务: 完成 {success_count} 个, 共获得书豆 {download_coins}"
+        msg = f"下载任务: 完成 {success_count} 个, 共获得书豆 {download_coins}\n"
+        print(msg)
         return msg
 
     def gift(self, cookies):
         """
         APP 试玩任务
         """
+        print("3. APP 体验试玩任务")
+        success_count = 0
         url = "https://www.duokan.com/events/common_task_gift_check"
         data = f"code=KYKJF7LL0G&{self.get_data(cookies=cookies)}&withid=1"
         res = requests.post(
@@ -325,19 +331,25 @@ class DuoKan:
                 res = requests.post(
                     url=url, data=data, cookies=cookies, headers=self.headers
                 ).json()
-                print(res.get("msg"))
+                #print(res.get("msg"))
                 if res.get("msg") == "成功":
                     num += 30
+                    success_count += 1
                     print("体验任务完成啦！豆子 +30")
-                else:
-                    print(res.get("msg"), res.get("data"))
-            return f"体验任务: 获得 {num} 豆子"
-        return f"体验任务: {res.text}"
+                # else:
+                #     print(res.get("msg"), res.get("data"))
+        msg = f"APP 体验试玩任务: 完成 {success_count} 个，获得 {num} 豆子\n"
+        print(msg)
+        return msg
 
     def task(self, cookies):
+        """
+        其他任务（广告视频等）
+        """
         success_count = 0
         success_coins = 0
         url = "https://www.duokan.com/events/tasks_gift"
+        print("4. 其他任务")
         #旧任务
         for code in self.code_list:
             while True:
@@ -365,7 +377,7 @@ class DuoKan:
             video_check_coins_count += video_check_coins
             video_check_count += 1
         res_msg = f"其他任务: 完成 {success_count} 个。\n" \
-                  f"其中看视频任务{video_check_count}个，大约获得书豆 {video_check_coins_count} 个"
+                  f"其中看视频任务{video_check_count}个，大约获得书豆 {video_check_coins_count} 个\n"
         print(res_msg)
         return res_msg
 
@@ -393,6 +405,7 @@ class DuoKan:
                     msg += f"{one.get('expire')} 到期，{one.get('coin')} 书豆\n"
         else:
             msg = "账号异常: Cookie 失效"
+        print(msg)
         return msg
 
     def free(self, cookies):
@@ -456,8 +469,8 @@ class DuoKan:
             #free_msg = self.free(cookies=cookie)
             sign_msg = self.sign(cookies=cookie)
             download_msg = self.download(cookies=cookie)
-            task_msg = self.task(cookies=cookie)
             gift_msg = self.gift(cookies=cookie)
+            task_msg = self.task(cookies=cookie)
             draw_msg = self.draw(cookies=cookie)
             add_draw_msg = self.add_draw(cookies=cookie)
             info_msg = self.info(cookies=cookie)
@@ -480,7 +493,6 @@ def Push(contents, plustoken):
     print('push+推送成功' if resp['code'] == 200 else 'push+推送失败')
 
 if __name__ == "__main__":
-    import os
     for dc in os.getenv('DUOKAN_COOKIE').split("&"):
         #print(dc)
         _check_items = [
