@@ -327,15 +327,18 @@ class DuoKan:
             num = 0
             url = "https://www.duokan.com/events/common_task_gift"
             for gift_code in self.gift_code_list:
-                data = f"code=KYKJF7LL0G&chances=1&sign={gift_code}&{self.get_data(cookies=cookies)}&withid=1"
-                res = requests.post(
-                    url=url, data=data, cookies=cookies, headers=self.headers
-                ).json()
-                #print(res.get("msg"))
-                if res.get("msg") == "成功":
-                    num += 30
-                    success_count += 1
-                    print("体验任务完成啦！豆子 +30")
+                while True:
+                    data = f"code=KYKJF7LL0G&chances=1&sign={gift_code}&{self.get_data(cookies=cookies)}&withid=1"
+                    res = requests.post(
+                        url=url, data=data, cookies=cookies, headers=self.headers
+                    ).json()
+                    #print(res.get("msg"))
+                    if res.get("msg") == "成功":
+                        num += 30
+                        success_count += 1
+                        print("体验任务完成啦！豆子 +30")
+                    else:
+                        break
                 time.sleep(2)
                 # else:
                 #     print(res.get("msg"), res.get("data"))
