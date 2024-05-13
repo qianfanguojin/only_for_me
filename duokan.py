@@ -213,6 +213,7 @@ class DuoKan:
             "3a6415de684e2978ce17543d66d523f6",
             "2f69a681ee1ff927df1bdbd5431ced1d",
             "e55c0390872735ec285dad8ebdd939e0",
+            "1e8f6296f80838df90cfc7a7cc540e65"
         ]
         self.code_list = [
             "K7S36GFSZC",
@@ -329,6 +330,10 @@ class DuoKan:
             for gift_code in self.gift_code_list:
                 while True:
                     data = f"code=KYKJF7LL0G&chances=1&sign={gift_code}&{self.get_data(cookies=cookies)}&withid=1"
+                    res = requests.post(
+                        url=url, data=data, cookies=cookies, headers=self.headers
+                    ).json()
+                    data = f"code=QNZX91D1CK&chances=1&sign={gift_code}&{self.get_data(cookies=cookies)}&withid=1"
                     res = requests.post(
                         url=url, data=data, cookies=cookies, headers=self.headers
                     ).json()
