@@ -1,7 +1,10 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# @Time    : 2024/08/14 23:47
+# @Author  : qianfanguojin
 """
 cron: 16 19 * * *
-new Env('OpenI算力积分签到');
+const $ = new Env('OpenI算力积分签到');
 """
 
 
@@ -82,12 +85,17 @@ def parse_cookie(cookie_str):
     return cookie_dict
 
 def main(cookie):
-    # 重新调试启动任务
-    restart(cookie)
-    # 延迟5秒停止任务
-    time.sleep(5)
-    # 停止任务
-    stop(cookie)
+    try:
+        # 重新调试启动任务
+        restart(cookie)
+        # 延迟5秒停止任务
+        time.sleep(5)
+        # 停止任务
+        stop(cookie)
+    except Exception as e:
+        return {'status': 'error', 'message': str(e)}
+    # qinglong 内置推送
+
     #api_url_base = "https://openi.pcl.ac.cn/api/v1/"
     # repo_owner_name = "qianfanguojin"
     # repo_name = "OpenI_Cloudbrain_Example"
@@ -96,10 +104,14 @@ def main(cookie):
 
 
 if __name__ == '__main__':
-    os.environ['OPENI_COOKIE'] = "lang=zh-CN; i_like_openi=71b88f888ade1dcd; Hm_lvt_46149a0b61fdeddfe427ff4de63794ba=1723223571,1723357414,1723478646; gitea_awesome=qianfanguojin; gitea_incredible=5b6274b74c393ed43d6d64ef36c44af526ff2910439dffe2217288916e5eff280cef270a5ee7a770b7; _csrf=aew4GTaO5sCx5gDsdElyOmirbvI6MTcyMzU2NjUzNzU0MzM4MjE3NA; Hm_lpvt_46149a0b61fdeddfe427ff4de63794ba=1723480427"
     for cookie_str in os.getenv('OPENI_COOKIE').split("&"):
          #print(dc)
         cookie_dict = parse_cookie(cookie_str)
-        main(cookie_dict)
-        print(f"账号：{cookie_dict['gitea_awesome']} OpenI算力积分签到成功 ！！！")
+        result = main(cookie_dict)
+        msg = result['message']
+        if result['status'] == 'success':
+            msg = f"账号：{cookie_dict['gitea_awesome']} OpenI算力积分签到成功 ！！！"
+        print(msg)
+        import notify
+        notify.send("【OPENI算力积分】", msg)
 
