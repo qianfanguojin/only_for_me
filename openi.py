@@ -92,6 +92,7 @@ def main(cookie):
         time.sleep(5)
         # 停止任务
         stop(cookie)
+        return {'status': 'success', 'message': "OpenI算力积分签到成功 ！！！"}
     except Exception as e:
         return {'status': 'error', 'message': str(e)}
     # qinglong 内置推送
@@ -110,7 +111,7 @@ if __name__ == '__main__':
         result = main(cookie_dict)
         msg = result['message']
         if result['status'] == 'success':
-            msg = f"账号：{cookie_dict['gitea_awesome']} OpenI算力积分签到成功 ！！！"
+            msg = f"账号：{cookie_dict['gitea_awesome']} {msg}"
         print(msg)
         import notify
         notify.send("【OPENI算力积分】", msg)
