@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+cron: 33 2 * * *
+new Env('TG 签到');
+"""
 
 import os,sys
 import time
