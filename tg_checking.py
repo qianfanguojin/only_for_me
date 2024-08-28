@@ -19,7 +19,7 @@ async def handle_bot_interaction(client, chat_entity, bot_entity, command, succe
     msg = ""
     try:
         await client.send_message(chat_entity, command)
-        time.sleep(2)
+        time.sleep(3)
         result = await client.get_messages(chat_entity, wait_time=1, from_user=bot_entity)
         msg = f"{success_message}\n{result[0].message}"
         await client.send_read_acknowledge(chat_entity)
