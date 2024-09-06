@@ -310,7 +310,7 @@ if __name__ == '__main__':
     复制里面的{CK_NAME}参数值
     参数示例：o0GLKv7aPboGaxxxxxxxxxxxxxxx
 ✨ 设置青龙变量：
-    export {ENV_NAME}='{CK_NAME}参数值【不要】前面的Bearer'多账号#或&分割
+    export {ENV_NAME}='{CK_NAME}'参数值，多账号#或&分割
 ✨ 注意：抓完CK没事儿别打开小程序，重新打开小程序请重新抓包
 ✨ 推荐cron：30 9 * * *
 ✨✨✨ @Author CHERWIN ✨✨✨
@@ -342,8 +342,8 @@ if __name__ == '__main__':
     if len(tokens) > 0:
         print(f"\n>>>>>>>>>>共获取到{len(tokens)}个账号<<<<<<<<<<")
         access_token = []
-        for index, infos in enumerate(tokens):
-            run_result = RUN(infos, index).main()
+        for index, info in enumerate(tokens):
+            run_result = RUN(info, index).main()
             if not run_result: continue
         import notify
         if notify.send: notify.send(f'{APP_NAME}挂机通知', send_msg)

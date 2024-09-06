@@ -293,11 +293,9 @@ def ENV_SPLIT(input_str):
 
 if __name__ == '__main__':
     APP_NAME = '霸王茶姬小程序'
-    ENV_NAME1 = 'BWCJ_CK'
-    ENV_NAME2 = 'BWCJ_UID'
-    CK_NAME1 = 'qm-user-token'
-    CK_NAME2 = 'userId'
-    CHECK_URL = "https://webapi2.qmai.cn/web/cmk-center/sign/takePartInSign"
+    ENV_NAME = 'BWCJ_CK'
+    CK_NAME = 'qm-user-token@userId'
+    CK_URL = "https://webapi2.qmai.cn/web/cmk-center/sign/takePartInSign"
     print(f'''
 ✨✨✨ {APP_NAME}签到✨✨✨
 ✨ 功能：
@@ -306,12 +304,12 @@ if __name__ == '__main__':
     打开{APP_NAME}，如果已登录请先退出登录
     打开抓包工具
     授权登陆，手动执行一次签到
-    抓包 {CHECK_URL}
-    找请求头中的{CK_NAME1}，复制里面的{CK_NAME1}参数值
-    找响应内容中的{CK_NAME2}，复制里面的{CK_NAME1}参数值
+    抓包 {CK_URL}
+    找请求头中的{CK_NAME.split("@")[0]}，复制里面的{CK_NAME.split("@")[0]}参数值
+    找响应内容中的{CK_NAME.split("@")[1]}，复制里面的{CK_NAME.split("@")[1]}参数值
+    参数示例："vaH3ixxxxxxxxxxxxx@9983xxx"
 ✨ 设置青龙变量：
-    export {ENV_NAME1}='{CK_NAME1}参数值'多账号#或&分割
-    export {ENV_NAME2}='{CK_NAME2}参数值'多账号#或&分割
+    export {ENV_NAME}='{CK_NAME}'参数值,多账号#或&分割
 ✨ ✨ 注意：抓完CK没事儿别打开小程序，重新打开小程序请重新抓包
 ✨ 推荐cron：27 9 * * *
 ✨✨✨ @Author CHERWIN✨✨✨
@@ -333,17 +331,16 @@ if __name__ == '__main__':
     #             exit()
     # print(TIPS)
     bwcj_ck = os.getenv('BWCJ_CK')
-    bwcj_uid = os.getenv('BWCJ_UID')
-    if not bwcj_ck or not bwcj_uid:
-        print(f"未填写 {ENV_NAME1} 或 {ENV_NAME2} 变量\n青龙可在环境变量设置 {ENV_NAME1} 或 {ENV_NAME2}")
+    if not bwcj_ck:
+        print(f"未填写 {ENV_NAME} 变量\n青龙可在环境变量设置 {ENV_NAME}")
         exit()
-    token = f"{bwcj_ck}@{bwcj_uid}"
+    token = bwcj_ck
     tokens = ENV_SPLIT(token)
     # print(tokens)
     if len(tokens) > 0:
         print(f"\n>>>>>>>>>>共获取到{len(tokens)}个账号<<<<<<<<<<")
-        for index, infos in enumerate(tokens):
-            run_result = RUN(infos, index).main()
+        for index, info in enumerate(tokens):
+            run_result = RUN(info, index).main()
             if not run_result: continue
         import notify
         if notify.send: notify.send(f'{APP_NAME}挂机通知', send_msg)
