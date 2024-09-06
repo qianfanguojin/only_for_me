@@ -295,7 +295,7 @@ def ENV_SPLIT(input_str):
 
 if __name__ == '__main__':
     APP_NAME = '蜜雪冰城小程序'
-    ENV_NAME = 'MXBC'
+    ENV_NAME = 'MXBC_UNIONID'
     CK_NAME = 'unionid'
     CK_URL = 'https://mxsa.mxbc.net/api/v1/app/loginByUnionid'
     print(f'''
