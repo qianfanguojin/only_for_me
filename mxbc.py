@@ -265,10 +265,14 @@ def down_file(filename, file_url):
         print(f'【{filename}】下载失败：{str(e)}')
         return False
 
-# def import_Tools():
-#     global CHERWIN_TOOLS,ENV, APP_INFO, TIPS, TIPS_HTML, AuthorCode
-#     import CHERWIN_TOOLS
-#     ENV, APP_INFO, TIPS, TIPS_HTML, AuthorCode = CHERWIN_TOOLS.main(APP_NAME, local_script_name, ENV_NAME,local_version)
+
+SCRIPT_STATUS="正常"
+def Change_status(status, msg=''):
+    global SCRIPT_STATUS
+    if msg:
+        SCRIPT_STATUS = status + f"-{msg}"
+    SCRIPT_STATUS = status
+
 # 取环境变量，并分割
 def ENV_SPLIT(input_str):
     parts = []
@@ -346,4 +350,4 @@ if __name__ == '__main__':
             run_result = RUN(info, index).main()
             if not run_result: continue
         import notify
-        if notify.send: notify.send(f'{APP_NAME}挂机通知', send_msg)
+        if notify.send: notify.send(f'{APP_NAME}挂机通知【{SCRIPT_STATUS}】', send_msg)
