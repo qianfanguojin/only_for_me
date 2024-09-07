@@ -264,13 +264,13 @@ class RUN:
             if self.csrf:
                 # 获取执行前用户信息
                 self.get_personal_info()
-                # 创建和删除任务
+                # 创建和删除任务（Issue）
                 self.issue_new_and_close()
-                # 重新调试启动任务
+                # 重新调试启动云脑任务
                 self.restart()
-                # 延迟5秒停止任务
+                # 延迟5秒停止云脑任务
                 time.sleep(5)
-                # 停止任务
+                # 停止云脑任务
                 self.stop()
                 # 获取执行后用户信息
                 self.get_personal_info(end=True)
