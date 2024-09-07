@@ -12,11 +12,14 @@ const $ = new Env('OpenI算力积分签到');
 
 
 import requests
+import re
 import os
 import time
 import rsa,base64
 import urllib3
 from urllib3.exceptions import InsecureRequestWarning
+from bs4 import BeautifulSoup
+
 # 禁用安全请求警告
 urllib3.disable_warnings(InsecureRequestWarning)
 if os.path.isfile('.env'):
@@ -45,7 +48,7 @@ class RUN:
         self.base_url = "https://openi.pcl.ac.cn/"
         self.csrf= self.get_csrf_token()
 
-    def response_json(self, method, url, params=None):
+    def response_json(self, method, url, params=None, data=None):
         """
         发起请求获取json响应
 
@@ -59,15 +62,82 @@ class RUN:
         """
 
         try:
-            response = self.s.request(method, url, headers=self.headers, params=params)
+            response = self.s.request(method, url, headers=self.headers, params=params, data=data)
             response.raise_for_status()  # 如果响应状态码不是 200-299，会引发 HTTPError
             return {'status': 'success', 'data': response.json()}
         except requests.RequestException as e:
             return {'status': 'error', 'error': str(e), 'response': response.text if response else 'No response'}
 
 
-
-
+    def issue_new_and_close(self):
+        # 创建 3 个 issue
+        Log(f"{self.user_name}/{self.repo} 开始创建任务")
+        url = f"{self.base_url}/{self.user_name}/{self.repo}/issues/new"
+        payload = {
+            "_csrf": self.csrf,
+            "title": "测试issue",
+            "content": "测试issue",
+            "ref": '',
+            "search": '',
+            "label_ids": '',
+            "milestone_id": '',
+            "assignee_ids": ''
+        }
+        for index in range(3):
+            new_result = self.s.post(url, data=payload)
+            if new_result.status_code == 200:
+                Log(f"{self.user_name}/{self.repo} 创建第 {index + 1} 个任务成功")
+            else:
+                Log(f"！！！创建第 {index + 1} 个任务失败: {result['reason']}")
+                Change_status("出错")
+                return False
+            time.sleep(2)
+        # 删除创建的 3 个 issue
+        Log(f"{self.user_name}/{self.repo} 关闭创建的任务")
+        url = f"{self.base_url}/{self.user_name}/{self.repo}/issues?q=&type=all&sort=&state=open&labels=&milestone=0&assignee=0"
+        result = self.s.get(url)
+        soup = BeautifulSoup(result.text, "html.parser")
+        issues = soup.find_all("div", class_="issue list")
+        if not (issues and len(issues) > 0):
+            Log(f"任务获取为空: {result['reason']}")
+            Change_status("出错")
+            return False
+        inputs = issues[0].find_all("input")
+        for index, input in enumerate(inputs[:3]):
+            issue_id = input["data-issue-id"]
+            url = f"{self.base_url}/{self.user_name}/{self.repo}/issues/status"
+            payload = {
+                "_csrf": self.csrf,
+                "action": 'close',
+                "issue_ids": issue_id,
+                "is_add": '',
+            }
+            result = self.response_json("POST", url, data=payload)
+            if result['status'] == 'success':
+                Log(f"{self.user_name}/{self.repo} 关闭第 {index + 1} 个任务成功")
+            else:
+                Log(f"！！！关闭第 {index + 1} 个任务失败: {result['reason']}")
+                Change_status("出错")
+                return False
+            time.sleep(2)
+        # 获取已关闭的任务列表
+        Log(f"{self.user_name}/{self.repo} 检查关闭的任务数量是否超标")
+        url = f"{self.base_url}/{self.user_name}/{self.repo}/issues?q=&type=all&sort=&state=closed&labels=&milestone=0&assignee=0"
+        result = self.s.get(url)
+        soup = BeautifulSoup(result.text, "html.parser")
+        element_a = soup.select(f'#issue-filters a[href="/{self.user_name}/{self.repo}/issues?q=&type=all&sort=&state=closed&labels=&milestone=0&assignee=0"]')
+        issue_count = 0
+        if len(element_a) > 0:
+            element_a_text = element_a[0].get_text()
+            #获取 element_a_text 标签内容中的数字部分
+            match = re.search(r'\d+', element_a_text)
+            if match:
+                issue_count = int(match.group())
+        if issue_count >= 100:
+            Change_status("警告","关闭的任务数量大于等于100")
+            return False
+        Log(f"{self.user_name}/{self.repo} 目前关闭的任务数量为: {issue_count}")
+        return True
     def restart(self):
         url = f"{self.base_url}/api/v1/{self.user_name}/{self.repo}/ai_task/restart"
         task = self.get_tasks()[0]["task"]
@@ -83,12 +153,15 @@ class RUN:
                     return True
                 else:
                     Log(f"！！！任务重启请求失败: {result['error']} - {result['response']}")
+                    Change_status("出错")
                     return False
             else:
                 Log("！！！任务未停止，无法执行重启命令")
+                Change_status("出错")
                 return False
         except requests.RequestException as e:
             Log(f"！！！任务重启异常: {str(e)}")
+            Change_status("出错")
             return False
 
     def stop(self):
@@ -106,12 +179,15 @@ class RUN:
                     return True
                 else:
                     Log(f"！！！任务停止失败: {result['error']} - {result['response']}")
+                    Change_status("出错")
                     return False
             else:
                 Log("！！！任务未启动, 无法执行停止命令")
+                Change_status("出错")
                 return False
         except requests.RequestException as e:
             Log(f"！！！任务停止异常: {str(e)}")
+            Change_status("出错")
             return False
 
     def get_tasks(self):
@@ -123,6 +199,7 @@ class RUN:
         else:
             msg = f"！！！获取任务列表失败: {result['error']} - {result['response']}"
             Log(msg)
+            Change_status("出错")
             raise msg
 
     def get_personal_info(self,end=False):
@@ -141,6 +218,8 @@ class RUN:
         else:
             msg = f"！！！获取用户信息失败: {result['error']} - {result['response']}"
             Log(msg)
+            Change_status("出错")
+
     def get_csrf_token(self):
 
         # 加密的公钥
@@ -158,6 +237,7 @@ class RUN:
         if not (home_result.status_code == 200 and unauthorized_csrf_token):
             message = home_result.get('reason', '')
             Log(f'获取未授权的 csrf_token 失败: {message}')
+            Change_status("出错")
             return False
         Log(f'获取未授权的 csrf_token 成功: {unauthorized_csrf_token}')
         login_url = f"{self.base_url}/user/login"
@@ -173,22 +253,30 @@ class RUN:
         if not (login_result.status_code == 200 and csrf_token and unauthorized_csrf_token != csrf_token):
             message = login_result.get('reason', '')
             Log(f'获取授权的 csrf_token 失败: {message}')
+            Change_status("出错")
             return False
         Log(f'获取授权的 csrf_token 成功: {csrf_token}')
+        Change_status("出错")
         return csrf_token
 
     def main(self):
-        if self.csrf:
-            # 获取执行前用户信息
-            self.get_personal_info()
-            # 重新调试启动任务
-            self.restart()
-            # 延迟5秒停止任务
-            time.sleep(5)
-            # 停止任务
-            self.stop()
-             # 获取执行后用户信息
-            self.get_personal_info(end=True)
+        try:
+            if self.csrf:
+                # 获取执行前用户信息
+                self.get_personal_info()
+                # 创建和删除任务
+                self.issue_new_and_close()
+                # 重新调试启动任务
+                self.restart()
+                # 延迟5秒停止任务
+                time.sleep(5)
+                # 停止任务
+                self.stop()
+                # 获取执行后用户信息
+                self.get_personal_info(end=True)
+        except Exception as e:
+            Log(f"！！！执行异常: {str(e)}")
+            return False
 # 取环境变量，并分割
 def ENV_SPLIT(input_str):
     parts = []
@@ -215,6 +303,12 @@ def ENV_SPLIT(input_str):
 
 send_msg = ''
 one_msg=''
+SCRIPT_STATUS="正常"
+def Change_status(status, msg=''):
+    global SCRIPT_STATUS
+    if msg:
+        SCRIPT_STATUS = status + f"-{msg}"
+    SCRIPT_STATUS = status
 def Log(cont=''):
     global send_msg,one_msg
     print(cont)
@@ -254,6 +348,6 @@ if __name__ == '__main__':
             run_result = RUN(infos, index).main()
             if not run_result: continue
     import notify
-    if notify.send: notify.send(f'{APP_NAME}挂机通知', send_msg)
+    if notify.send: notify.send(f'{APP_NAME}挂机通知【{SCRIPT_STATUS}】', send_msg)
 
 
