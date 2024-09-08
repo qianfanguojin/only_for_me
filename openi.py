@@ -57,7 +57,7 @@ class RUN:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
         }
         self.s.headers.update(self.headers)
-        self.base_url = "https://openi.pcl.ac.cn/"
+        self.base_url = "https://openi.pcl.ac.cn"
         self.csrf= self.get_csrf_token()
 
     def response_json(self, method, url, params=None, data=None):
