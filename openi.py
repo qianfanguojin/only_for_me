@@ -31,14 +31,26 @@ else:
 
 class RUN:
     def __init__(self, info, index):
-        global one_msg
-        one_msg = ''
-        split_info = info.split('@')
-        self.user_name = split_info[0]
-        self.password = split_info[1]
-        self.repo = split_info[2]
+        self.split_info = info.split('@')
         self.index = index + 1
-        Log(f"\n---------开始执行第{self.index}个账号>>>>>")
+
+    def init_var(self):
+        self.user_name = ''
+        self.password = ''
+        self.repo = ''
+
+        for i, info in enumerate(self.split_info):
+            if i == 0:
+                self.user_name = info
+            elif i == 1:
+                self.password = info
+            elif i == 2:
+                self.repo = info
+        if self.user_name == '' or self.password == '' or self.repo == '':
+            Log(f"！！！账号信息不完整: {self.user_name} - {self.repo}")
+            Change_status("出错")
+            return False
+        Log(f"\n---------开始执行第{self.index}个账号：{self.user_name}>>>>>")
         self.s = requests.session()
         self.s.verify = False
         self.headers = {
@@ -261,6 +273,8 @@ class RUN:
 
     def main(self):
         try:
+            # 初始化变量
+            self.init_var()
             if self.csrf:
                 # 获取执行前用户信息
                 self.get_personal_info()
@@ -275,6 +289,7 @@ class RUN:
                 # 获取执行后用户信息
                 self.get_personal_info(end=True)
         except Exception as e:
+            Change_status("出错")
             Log(f"！！！执行异常: {str(e)}")
             return False
 # 取环境变量，并分割
@@ -339,12 +354,14 @@ if __name__ == '__main__':
     ENV = os.getenv('OPENI_COOKIE')
     token = ENV if ENV else token
     if not token:
-        print(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将{CK_NAME}填入token =''")
+        Log(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将{CK_NAME}填入token =''")
         exit()
     tokens = ENV_SPLIT(token)
     if len(tokens) > 0:
-        print(f"\n>>>>>>>>>>共获取到{len(tokens)}个账号<<<<<<<<<<")
+        Log(f"\n>>>>>>>>>>共获取到{len(tokens)}个账号<<<<<<<<<<")
         for index, infos in enumerate(tokens):
+            if not infos or infos == '':
+                Log(f"{ENV_NAME}变量填写格式错误，请检查")
             run_result = RUN(infos, index).main()
             if not run_result: continue
     import notify
