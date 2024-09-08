@@ -193,7 +193,7 @@ class RUN:
             print(e)
             return False
 
-    def points_info(self):
+    def points_info(self,end=False):
         try:
             json_data = {
                 'appid': self.appid
@@ -209,10 +209,12 @@ class RUN:
                 total_points = data.get('totalPoints', 0)
                 expired_time = data.get('expiredTime', '')
 
+                if not end:
+                    Log(f'【运行前】当前积分: 【{total_points}】')
+                    return
                 if soon_expired_points:
                     Log(f'有【{soon_expired_points}】积分将于（ {expired_time}）过期')
-
-                Log(f'当前积分: 【{total_points}】')
+                Log(f'【运行后】当前积分: 【{total_points}】')
                 return total_points, soon_expired_points, expired_time
             else:
                 message = result.get('message', '')
@@ -227,41 +229,13 @@ class RUN:
             Log("用户信息无效，请更新CK")
             #self.sendMsg()
             return False
-        self.user_sign_statistics()
         self.points_info()
+        self.user_sign_statistics()
+        self.points_info(end=True)
         return True
 
-    # def sendMsg(self, help=False):
-    #     if self.send_UID:
-    #         push_res = CHERWIN_TOOLS.wxpusher(self.send_UID, one_msg, APP_NAME, help)
-    #         print(push_res)
 
 
-def down_file(filename, file_url):
-    print(f'开始下载：{filename}，下载地址：{file_url}')
-    try:
-        response = requests.get(file_url, verify=False, timeout=10)
-        response.raise_for_status()
-        with open(filename + '.tmp', 'wb') as f:
-            f.write(response.content)
-        print(f'【{filename}】下载完成！')
-
-        # 检查临时文件是否存在
-        temp_filename = filename + '.tmp'
-        if os.path.exists(temp_filename):
-            # 删除原有文件
-            if os.path.exists(filename):
-                os.remove(filename)
-            # 重命名临时文件
-            os.rename(temp_filename, filename)
-            print(f'【{filename}】重命名成功！')
-            return True
-        else:
-            print(f'【{filename}】临时文件不存在！')
-            return False
-    except Exception as e:
-        print(f'【{filename}】下载失败：{str(e)}')
-        return False
 
 SCRIPT_STATUS="正常"
 def Change_status(status, msg=''):
