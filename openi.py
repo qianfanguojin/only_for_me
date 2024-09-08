@@ -258,13 +258,11 @@ class RUN:
             "password": password_base64,
             "_csrf": unauthorized_csrf_token
         }
-        login_result = self.s.post(login_url,
-                                   headers=self.headers, data=payload)
+        login_result = self.s.post(login_url, data=payload)
         csrf_token = login_result.cookies.get("_csrf")
         # 第二阶段获取到的 csrf_token 为空或者和未授权的 csrf_token 相同，说明登录失败
         if not (login_result.status_code == 200 and csrf_token and unauthorized_csrf_token != csrf_token):
-            message = login_result.get('reason', '')
-            Log(f'获取授权的 csrf_token 失败: {message}')
+            Log(f'获取授权的 csrf_token 失败 ！！')
             Change_status("出错")
             return False
         Log(f'获取授权的 csrf_token 成功: {csrf_token}')
