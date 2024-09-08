@@ -266,7 +266,6 @@ class RUN:
             Change_status("出错")
             return False
         Log(f'获取授权的 csrf_token 成功: {csrf_token}')
-        Change_status("出错")
         return csrf_token
 
     def main(self):
