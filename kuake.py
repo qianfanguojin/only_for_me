@@ -115,7 +115,7 @@ class RUN:
             "pr": "ucpro",
             "fr": "android",
         }
-        response = self.request_json("GET",url=url, params=querystring)
+        response = self.request_json("GET", url, params=querystring)
         if response.get("data",'').get("data",''):
             return response["data"]["data"]
         else:
@@ -130,7 +130,7 @@ class RUN:
             "fr": "android",
         }
         payload = {"sign_cyclic": True}
-        response = self.request_json("POST",json=payload, params=querystring)
+        response = self.request_json("POST", url, json=payload, params=querystring)
         if response.get("data",'').get("data"):
             return True, response["data"]["data"]["sign_daily_reward"]
         else:
