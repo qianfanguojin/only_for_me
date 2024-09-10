@@ -160,7 +160,6 @@ class RUN:
                     else:
                         msg += f"✅ 执行签到: {sign_return}\n"
                         Log(msg)
-            Log(msg)
         except Exception as e:
             Change_status("出错")
             Log(f"！！！执行异常: {str(e)}")
