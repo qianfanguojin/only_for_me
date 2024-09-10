@@ -13,6 +13,10 @@
 # new Env("中国移动云盘")
 # 作者: 洋洋不瘦 https://github.com/smallfawn/QLScriptPublic/blob/main/yidongyunpan.py
 # 修改：qianfanguojin
+"""
+cron: 0 0 8,16,20 * * *
+new Env('中国移动云盘');
+"""
 import os
 import random
 import re
