@@ -1,8 +1,8 @@
 # !/usr/bin/python3
 # -- coding: utf-8 --
 # -------------------------------
+# cron "23 9 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('天翼云盘签到');
-
 import base64
 import os
 import re
