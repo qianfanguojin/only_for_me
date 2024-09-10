@@ -202,7 +202,7 @@ class RUN:
             Log('✅ 登陆成功！')
             #print(r.json()['msg'])
         else:
-            Log(f'登陆失败！：{r.json()['msg']}')
+            Log(f"登陆失败！：{r.json()['msg']}")
         redirect_url = r.json()['toUrl']
         r = s.get(redirect_url)
         if r.status_code == 200:
