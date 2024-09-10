@@ -238,34 +238,6 @@ class RUN:
             return False
 
 
-
-def down_file(filename, file_url):
-    print(f'开始下载：{filename}，下载地址：{file_url}')
-    try:
-        response = requests.get(file_url, verify=False, timeout=10)
-        response.raise_for_status()
-        with open(filename + '.tmp', 'wb') as f:
-            f.write(response.content)
-        print(f'【{filename}】下载完成！')
-
-        # 检查临时文件是否存在
-        temp_filename = filename + '.tmp'
-        if os.path.exists(temp_filename):
-            # 删除原有文件
-            if os.path.exists(filename):
-                os.remove(filename)
-            # 重命名临时文件
-            os.rename(temp_filename, filename)
-            print(f'【{filename}】重命名成功！')
-            return True
-        else:
-            print(f'【{filename}】临时文件不存在！')
-            return False
-    except Exception as e:
-        print(f'【{filename}】下载失败：{str(e)}')
-        return False
-
-
 SCRIPT_STATUS="正常"
 def Change_status(status, msg=''):
     global SCRIPT_STATUS
