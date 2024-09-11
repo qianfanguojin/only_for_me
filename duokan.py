@@ -1,12 +1,83 @@
 # -*- coding: utf-8 -*-
 """
-cron: 30 20 * * *
+cron: 33 8 * * *
 new Env('多看阅读');
 """
 
 import time
 import os
 import requests
+import urllib3
+from urllib3.exceptions import InsecureRequestWarning
+
+# 禁用安全请求警告
+urllib3.disable_warnings(InsecureRequestWarning)
+if os.path.isfile('.env'):
+    IS_DEV = True
+    from dotenv import load_dotenv
+    load_dotenv('.env')
+else:
+    IS_DEV = False
+def LOAD_SEND():
+    cur_path = os.path.abspath(os.path.dirname(__file__))
+    notify_file = cur_path + "/notify.py"
+
+    if os.path.exists(notify_file):
+        try:
+            from notify import send  # 导入模块的send为notify_send
+            print("加载通知服务成功！")
+            return send  # 返回导入的函数
+        except ImportError:
+            print("加载通知服务失败~")
+    else:
+        print("加载通知服务失败~")
+
+    return False  # 返回False表示未成功加载通知服务
+
+# 取环境变量，并分割
+def ENV_SPLIT(input_str):
+    parts = []
+    if '&' in input_str:
+        amp_parts = input_str.split('&')
+        for part in amp_parts:
+            if '#' in part:
+                hash_parts = part.split('#')
+                for hash_part in hash_parts:
+                    parts.append(hash_part)
+            else:
+                parts.append(part)
+        # print(parts)
+        return (parts)
+
+    elif '#' in input_str:
+        hash_parts = input_str.split('#')
+        # print(hash_parts)
+        return (hash_parts)
+    else:
+        out_str = str(input_str)
+        # print([out_str])
+        return ([out_str])
+
+def RANDOM_DELAY_RUN(min_delay=60, max_delay=120):
+    import random
+    delay = random.uniform(min_delay, max_delay)
+    Log(f"随机延迟{delay}秒")
+    time.sleep(delay)
+
+send_msg = ''
+one_msg=''
+SCRIPT_STATUS="正常"
+def Change_status(status, msg=''):
+    global SCRIPT_STATUS
+    if msg:
+        SCRIPT_STATUS = status + f"-{msg}"
+    SCRIPT_STATUS = status
+def Log(cont=''):
+    global send_msg,one_msg
+    print(cont)
+    if cont:
+        one_msg += f'{cont}\n'
+        send_msg += f'{cont}\n'
 # 推送加
 plustoken = os.getenv("plustoken")
 class DuoKan:
@@ -490,22 +561,49 @@ class DuoKan:
             )
             msg_all += msg + "\n\n"
         return msg_all
-#推送函数
-def Push(contents, plustoken):
-    # 推送加
-    headers = {'Content-Type': 'application/json'}
-    json = {"token": plustoken, 'title': '多看签到', 'content': contents.replace('\n', '<br>'), "template": "json"}
-    resp = requests.post(f'http://www.pushplus.plus/send', json=json, headers=headers).json()
-    print('push+推送成功' if resp['code'] == 200 else 'push+推送失败')
 
 if __name__ == "__main__":
-    for dc in os.getenv('DUOKAN_COOKIE').split("&"):
+    APP_NAME = '多看阅读'
+    ENV_NAME = 'DUOKAN_COOKIE'
+    CK_NAME = 'cookie值'
+    CK_EX = 'mi_version=V13.0.8.0.SKJCNXM; _m=1; platform=android; app_id=DuoKan; xxx'
+    CK_URL = 'https://www.duokan.com'
+    print(f'''
+✨✨✨ {APP_NAME}签到✨✨✨
+✨ 功能：
+    {APP_NAME}签到 基础任务 看广告 下载APP...
+✨ 抓包步骤：
+    打开抓包工具
+    打开{APP_NAME} APP
+    找{CK_URL} 请求头中的Cookie，复制粘贴即可
+    示例：{CK_EX}
+✨ 设置青龙变量：
+    export {ENV_NAME}='{CK_NAME}'参数值，多账号#或&分割
+✨ 推荐cron：33 8 * * *
+✨✨✨ @Modify qianfanguojin ✨✨✨
+''')
+    local_script_name = os.path.basename(__file__)
+    local_version = '2024.09.11'
+    token = ''
+    ENV = os.getenv(ENV_NAME)
+    token = ENV if ENV else token
+    if not token:
+        Log(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将{CK_NAME}填入token =''")
+        exit()
+    tokens = ENV_SPLIT(token)
+    for dc in tokens:
         #print(dc)
         _check_items = [
             {
                 "cookie": dc
             }
         ]
-        result = DuoKan(check_items=_check_items).main()
-        if plustoken != '':
-            Push(result, plustoken)
+        send_msg = DuoKan(check_items=_check_items).main()
+            # 在LOAD_SEND中获取导入的send函数
+    send = LOAD_SEND()
+
+    # 判断send是否可用再进行调用
+    if send:
+        send(f'{APP_NAME}挂机通知【{SCRIPT_STATUS}】', send_msg)
+    else:
+        print('通知服务不可用')
