@@ -929,7 +929,7 @@ if __name__ == "__main__":
         exit()
     tokens = ENV_SPLIT(token)
 
-    print(f"移动硬盘共获取到{len(tokens)}个账号")
+    print(f"移动云盘共获取到{len(tokens)}个账号")
 
     for i, account_info in enumerate(tokens, start = 1):
         Log(f"\n======== ▷ 第 {i} 个账号 ◁ ========")
