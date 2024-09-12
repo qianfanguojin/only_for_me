@@ -14,7 +14,7 @@ WxPusher官网: https://wxpusher.zjiecode.com/admin/main/app/appInfo
 
 export appToken='apptoken#uid'
 
-cron: 0 0 6,10,14 * * script-path=xxx.py,tag=匹配cron用
+cron "0 0 6,10,14 * *" script-path=xxx.py,tag=匹配cron用
 const $ = new Env('星芽免费短剧')
 */
 
