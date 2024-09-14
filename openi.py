@@ -1,15 +1,13 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# @Time    : 2024/08/14 23:47
-# @Update  : 2024/09/07 00:56
-# @Author  : qianfanguojin
-# @Url     : https://openi.pcl.ac.cn/
-"""
-cron: 16 19 * * *
-const $ = new Env('OpenI算力积分签到');
-"""
-
-
+# !/usr/bin/python3
+# -- coding: utf-8 --
+# -------------------------------
+# OpenI 启智平台
+# @Author qianfanguojin
+# @Time 2024.09.07
+# @Url https://openi.pcl.ac.cn/
+# -------------------------------
+# cron "16 8 * * *" script-path=xxx.py,tag=匹配cron用
+# const $ = new Env('OpenI算力积分签到');
 
 import requests
 import re

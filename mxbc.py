@@ -1,8 +1,10 @@
 # !/usr/bin/python3
 # -- coding: utf-8 --
 # -------------------------------
+# 蜜雪冰城
 # @Author CHERWIN✨✨✨
-# @Modify qianfanguojin✨✨✨ @2024.09.01
+# @Modify qianfanguojin
+# @Time 2024.09.01
 # -------------------------------
 # cron "30 9 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('蜜雪冰城小程序')

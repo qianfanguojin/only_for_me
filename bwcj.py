@@ -1,8 +1,10 @@
 # !/usr/bin/python3
 # -- coding: utf-8 --
 # -------------------------------
-# @Author CHERWIN✨✨✨
-# @Modify qianfanguojin✨✨✨ @2024.09.01
+# 霸王茶姬
+# @Author CHERWIN
+# @Modify qianfanguojin
+# @Time 2024.09.01
 # -------------------------------
 # cron "27 9 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('霸王茶姬小程序')

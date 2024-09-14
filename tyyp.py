@@ -1,8 +1,13 @@
 # !/usr/bin/python3
 # -- coding: utf-8 --
 # -------------------------------
-# cron "23 9 * * *" script-path=xxx.py,tag=匹配cron用
+# 天翼云盘
+# @Author qianfanguojin
+# @Time 2024.09.16
+# -------------------------------
+# cron "23 8 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('天翼云盘签到');
+
 import base64
 import os
 import re

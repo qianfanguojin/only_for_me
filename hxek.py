@@ -1,13 +1,17 @@
 # !/usr/bin/python3
 # -- coding: utf-8 --
 # -------------------------------
+# 鸿星尔克
+# @Author qianfanguojin✨✨✨
+# @Time 2024.09.01
+# -------------------------------
 # cron "5 11 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('鸿星尔克官方会员中心小程序')
 
 import os
 import random
 import time
-from datetime import datetime, time as times
+from datetime import time
 import requests
 import hashlib
 import urllib3

@@ -1,15 +1,15 @@
-#
-# 软件名称：哈啰
-# 版本：1.1.3
-# 抓包位置：首页 福利中心 查看更多 抓包 api.hellobike.com/api?urser 请求里面的 TOKEN
-# 定时 0 8 * * *
-# 变量名称：hlToken
-# 多账号用&隔开
-# ##哈啰
-# export HALUO_TOKEN="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-# 奖励：积攒奖励金可换手机话费重置抵用券
+# !/usr/bin/python3
 # -- coding: utf-8 --
 # -------------------------------
+# 哈啰出行
+# @Author qianfanguojin
+# @Time 2024.09.01
+# -------------------------------
+# 软件名称：哈啰
+# 奖励：积攒奖励金可换手机话费重置抵用券
+# 抓包位置：首页 福利中心 查看更多 抓包 api.hellobike.com/api?urser 请求里面的 TOKEN
+# 定时 0 8 * * *
+# export HALUO_TOKEN="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 # cron "1 8 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('哈啰签到');
 import os
@@ -302,7 +302,7 @@ if __name__ == '__main__':
 ''')
     if not IS_DEV:
         RANDOM_DELAY_RUN()
-    local_script_name = os.path.basename(__file__) 
+    local_script_name = os.path.basename(__file__)
     local_version = '2024.09.12'
     token = ''
     ENV = os.getenv(ENV_NAME)

@@ -1,3 +1,14 @@
+# !/usr/bin/python3
+# -- coding: utf-8 --
+# -------------------------------
+# 中国移动云盘
+# @Author 洋洋不瘦 https://github.com/smallfawn/QLScriptPublic/blob/main/yidongyunpan.py
+# @Modify qianfanguojin
+# @Time 2024.09.16
+# -------------------------------
+# cron "0 0 8,16,20 * * *" script-path=xxx.py,tag=匹配cron用
+# const $ = new Env('中国移动云盘');
+
 # 脚本名称: [中国移动云盘]
 # 功能描述: [签到 基础任务 果园 云朵大作战]
 # 使用说明:
@@ -6,20 +17,9 @@
 # 环境变量设置:
 #   - 名称：[YDYP_COOKIE]   格式：[Authorization值@手机号@token值]
 #   - 多账号处理方式：[#或者&分割]
-# 定时设置: [0 0 8,16,20 * * *]
-# 更新日志:
-#   - [1.30]: [同一环境变量获取]
-# 注: 本脚本仅用于个人学习和交流，请勿用于非法用途。作者不承担由于滥用此脚本所引起的任何责任，请在下载后24小时内删除。
-# new Env("中国移动云盘")
-# 作者: 洋洋不瘦 https://github.com/smallfawn/QLScriptPublic/blob/main/yidongyunpan.py
-# 修改：qianfanguojin
-"""
-cron: 0 0 8,16,20 * * *
-new Env('中国移动云盘');
-"""
+
 import os
 import random
-import re
 import time
 from os import path
 

@@ -1,8 +1,12 @@
-# -*- coding: utf-8 -*-
-"""
-cron: 33 8 * * *
-new Env('多看阅读');
-"""
+# !/usr/bin/python3
+# -- coding: utf-8 --
+# -------------------------------
+# 多看阅读
+# @Author qianfanguojin
+# @Time 2024.09.01
+# -------------------------------
+# cron "33 8 * * *" script-path=xxx.py,tag=匹配cron用
+# const $ = new Env('多看阅读');
 
 import time
 import os

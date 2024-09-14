@@ -1,8 +1,12 @@
-# -*- coding: utf-8 -*-
-"""
-cron: 33 2 * * *
-new Env('TG 签到');
-"""
+# !/usr/bin/python3
+# -- coding: utf-8 --
+# -------------------------------
+# Telegram 签到
+# @Author qianfanguojin
+# @Time 2024.09.15
+# -------------------------------
+# cron "18 8 * * *" script-path=xxx.py,tag=匹配cron用
+# const $ = new Env('TG 签到');
 
 import os,sys
 import time

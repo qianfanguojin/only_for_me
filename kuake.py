@@ -1,45 +1,19 @@
-#!/usr/bin/python3
+# !/usr/bin/python3
 # -- coding: utf-8 --
 # -------------------------------
+# 夸克网盘
 # @Author : github@wd210010 https://github.com/wd210010/only_for_happly
 # @Time : 2024/5/4 16:23
-# @Modify : qianfanguojin https://github.com/qianfanguojin/only_for_me
+# @Modify : qianfanguojin✨✨✨ https://github.com/qianfanguojin/only_for_me
 # @Time : 2024/9/8 16:23
 # -------------------------------
 # cron "0 0 2 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('夸克签到')
-#搬运至https://github.com/BNDou/Auto_Check_In
-#抓包浏览器访问-https://pan.quark.cn/ 并登录 抓取cookie全部 填入青龙变量 环境变量名为 COOKIE_QUARK，多账户用 回车 或 && 分开
-
-import os
-import re
-import sys
-import requests
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# @Time    : 2024/08/14 23:47
-# @Update  : 2024/09/07 00:56
-# @Author  : qianfanguojin
-# @Url     : https://openi.pcl.ac.cn/
-"""
-cron: 16 19 * * *
-const $ = new Env('OpenI算力积分签到');
-"""
-
-#解析cookie到字典
-
-
-
 
 import requests
-import re
 import os
-import time
-import rsa,base64
 import urllib3
 from urllib3.exceptions import InsecureRequestWarning
-from bs4 import BeautifulSoup
 
 # 禁用安全请求警告
 urllib3.disable_warnings(InsecureRequestWarning)
