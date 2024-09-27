@@ -153,7 +153,6 @@ class RUN:
         )
 
     def login(self):
-        # https://m.cloud.189.cn/login2014.jsp?redirectURL=https://m.cloud.189.cn/zhuanti/2021/shakeLottery/index.html
         url = ""
         urlToken = "https://m.cloud.189.cn/udb/udb_login.jsp?pageId=1&pageKey=default&clientType=wap&redirectURL=https://m.cloud.189.cn/zhuanti/2021/shakeLottery/index.html"
         r = s.get(urlToken)
@@ -161,18 +160,15 @@ class RUN:
         match = re.search(pattern, r.text)  # 在文本中搜索匹配
         if match:  # 如果找到匹配
             url = match.group()  # 获取匹配的字符串
-            # print(url)  # 打印url
         else:  # 如果没有找到匹配
             print("没有找到url")
 
         r = s.get(url)
-        # print(r.text)
         pattern = r"<a id=\"j-tab-login-link\"[^>]*href=\"([^\"]+)\""  # 匹配id为j-tab-login-link的a标签，并捕获href引号内的内容
         match = re.search(pattern, r.text)  # 在文本中搜索匹配
         if match:  # 如果找到匹配
             href = match.group(1)  # 获取捕获的内容
             r = s.get(href)
-            # print("href:" + href)  # 打印href链接
         else:  # 如果没有找到匹配
             print("没有找到href链接")
             exit()
@@ -205,9 +201,9 @@ class RUN:
         r = s.post(url, data=data, headers=headers, timeout=5)
         if (r.json()['result'] == 0):
             Log('✅ 登陆成功！')
-            #print(r.json()['msg'])
         else:
             Log(f"登陆失败！：{r.json()['msg']}")
+            Change_status("异常")
         redirect_url = r.json()['toUrl']
         r = s.get(redirect_url)
         if r.status_code == 200:
@@ -218,12 +214,11 @@ class RUN:
     def signIn(self):
         Log('>>>>>>签到')
         rand = str(round(time.time() * 1000))
-        # print(rand)
         surl = f'https://api.cloud.189.cn/mkt/userSign.action?rand={rand}&clientType=TELEANDROID&version=8.6.3&model=SM-G930K'
 
         response = s.get(surl, headers=self.headers)
         netdiskBonus = response.json()['netdiskBonus']
-        if (response.json().get('isSign','false') == "false"):
+        if not response.json().get('isSign',False):
             Log(f"✅ 签到成功，签到获得{netdiskBonus}M空间\n")
         else:
             Log(f"⚠️ 已经签到过了，签到获得{netdiskBonus}M空间\n")
@@ -231,24 +226,28 @@ class RUN:
     def lottery(self):
         Log('>>>>>>抽奖')
         url_list = ['https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN&activityId=ACT_SIGNIN',
-                    'https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN_PHOTOS&activityId=ACT_SIGNIN',
-                    'https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_2022_FLDFS_KJ&activityId=ACT_SIGNIN']
+                    'https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_2022_FLDFS_KJ&activityId=ACT_SIGNIN',
+                    'https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN_PHOTOS&activityId=ACT_SIGNIN',]
         for index, urls in enumerate(url_list):
             response = s.get(urls, headers=self.headers)
             if ("errorCode" in response.text):
                 Log(f"链接{index + 1}抽奖失败")
                 print(response.text)
+                Change_status("异常")
             else:
                 description = response.json()['prizeName']
+                Change_status("正常")
                 Log(f"链接{index + 1}抽奖获得{description}\n")
-
+            time.sleep(5)
     def main(self):
-        Log(f"\n开始执行第{self.index}个账号【{self.userid[-4:]}】--------------->>>>>")
+        Log(f"\n=======\t 开始执行第{self.index}个账号【{self.userid[-4:]}】 \t=======\n")
+        Log(f"\n")
         if not self.login():
             print(f'\n第{self.index}个账号【{self.userid[-4:]}登陆失败！')
             return False
         self.signIn()
         self.lottery()
+        Log(f"\n=======\t 第{self.index}个账号执行完毕 \t=======\n")
         return True
 
 
@@ -280,9 +279,8 @@ export {ENV_NAME}='{CK_NAME}参数值'多账号#或&分割
         print(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将{CK_NAME}填入token =''")
         exit()
     tokens = ENV_SPLIT(token)
-    # print(tokens)
     if len(tokens) > 0:
-        print(f"\n>>>>>>>>>>共获取到{len(tokens)}个账号<<<<<<<<<<")
+        Log(f"\n=======\t 共获取到 {len(tokens)} 个账号 \t=======")
         access_token = []
         for index, infos in enumerate(tokens):
             s = requests.session()
