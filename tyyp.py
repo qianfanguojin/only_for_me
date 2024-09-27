@@ -212,19 +212,17 @@ class RUN:
             return False
 
     def signIn(self):
-        Log('>>>>>>签到')
         rand = str(round(time.time() * 1000))
         surl = f'https://api.cloud.189.cn/mkt/userSign.action?rand={rand}&clientType=TELEANDROID&version=8.6.3&model=SM-G930K'
 
         response = s.get(surl, headers=self.headers)
         netdiskBonus = response.json()['netdiskBonus']
         if not response.json().get('isSign',False):
-            Log(f"✅ 签到成功，签到获得{netdiskBonus}M空间\n")
+            Log(f"✅ 签到成功，签到获得{netdiskBonus}M空间")
         else:
-            Log(f"⚠️ 已经签到过了，签到获得{netdiskBonus}M空间\n")
+            Log(f"⚠️ 已经签到过了，签到获得{netdiskBonus}M空间")
 
     def lottery(self):
-        Log('>>>>>>抽奖')
         url_list = ['https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN&activityId=ACT_SIGNIN',
                     'https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_2022_FLDFS_KJ&activityId=ACT_SIGNIN',
                     'https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN_PHOTOS&activityId=ACT_SIGNIN',]
@@ -240,14 +238,16 @@ class RUN:
                 Log(f"链接{index + 1}抽奖获得{description}\n")
             time.sleep(5)
     def main(self):
-        Log(f"\n=======\t 开始执行第{self.index}个账号【{self.userid[-4:]}】 \t=======\n")
-        Log(f"\n")
+        Log(f"=======\t 开始执行第 {self.index} 个账号【{self.userid[-4:]}】")
+        Log(f"\n==>🧑 登陆账号")
         if not self.login():
             print(f'\n第{self.index}个账号【{self.userid[-4:]}登陆失败！')
             return False
+        Log(f"\n==>💥 签到")
         self.signIn()
+        Log(f"\n==>🎁 抽奖")
         self.lottery()
-        Log(f"\n=======\t 第{self.index}个账号执行完毕 \t=======\n")
+        Log(f"\n=======\t 第{self.index}个账号执行完毕")
         return True
 
 
@@ -280,7 +280,7 @@ export {ENV_NAME}='{CK_NAME}参数值'多账号#或&分割
         exit()
     tokens = ENV_SPLIT(token)
     if len(tokens) > 0:
-        Log(f"\n=======\t 共获取到 {len(tokens)} 个账号 \t=======")
+        Log(f"=======\t 共获取到 {len(tokens)} 个账号")
         access_token = []
         for index, infos in enumerate(tokens):
             s = requests.session()
