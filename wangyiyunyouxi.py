@@ -109,7 +109,7 @@ class RUN:
             Log(f"✅ 签到成功")
             return True
         else:
-            Change_status("异常")
+            Log(f"ℹ️ 已经签到了！！")
             return False
     def main(self):
         try:
@@ -164,3 +164,11 @@ if __name__ == "__main__":
             if not run_result:
                 SCRIPT_STATUS = "异常"
 
+        # 在LOAD_SEND中获取导入的send函数
+    send = LOAD_SEND()
+
+    # 判断send是否可用再进行调用
+    if send:
+        send(f'{APP_NAME}挂机通知【{SCRIPT_STATUS}】', send_msg)
+    else:
+        print('通知服务不可用')
