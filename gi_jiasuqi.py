@@ -1,15 +1,18 @@
 # !/usr/bin/python3
 # -- coding: utf-8 --
 # -------------------------------
-# @Author qianfanguojin✨✨✨ @2024.09.01
+# Gi 游戏加速器
+# @Author qianfanguojin
+# @Time 2024.09.01
 # -------------------------------
+# const $ = new Env('Gi 游戏加速器');
 
 import os
 import requests
 import urllib3
 import time
 from urllib3.exceptions import InsecureRequestWarning
-# import CHERWIN_TOOLS
+
 # 禁用安全请求警告
 urllib3.disable_warnings(InsecureRequestWarning)
 IS_DEV = False
