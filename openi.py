@@ -144,6 +144,7 @@ class RUN:
             if match:
                 issue_count = int(match.group())
         if issue_count >= 100:
+            Log(f"！！！任务数量超标: {issue_count}")
             Change_status("警告","关闭的任务数量大于等于100")
             return False
         Log(f"{self.user_name}/{self.repo} 目前关闭的任务数量为: {issue_count}")
