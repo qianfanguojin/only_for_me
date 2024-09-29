@@ -104,8 +104,8 @@ class RUN:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36',
             'X-Platform': '0'
         }
-        res = self.s.post(url=url, headers=header).status_code
-        if res == 200:
+        res = self.s.post(url=url, headers=header)
+        if res.status_code == 200:
             Log(f"✅ 签到成功")
             return True
         else:
@@ -113,10 +113,10 @@ class RUN:
             return False
     def main(self):
         try:
-            Log(f"\n=======\t开始执行第 {self.index}个账号")
+            Log(f"\n=======\t开始执行第 {self.index} 个账号")
             Log(f"\n==>💥 签到")
             self.sign()
-            Log(f"\n=======\t第{self.index}个账号执行完毕")
+            Log(f"\n=======\t第 {self.index} 个账号执行完毕")
             return True
         except Exception as e:
             Log(f"！！！执行异常: {str(e)}")
@@ -164,7 +164,7 @@ if __name__ == "__main__":
             if not run_result:
                 SCRIPT_STATUS = "异常"
 
-        # 在LOAD_SEND中获取导入的send函数
+    # 在LOAD_SEND中获取导入的send函数
     send = LOAD_SEND()
 
     # 判断send是否可用再进行调用
