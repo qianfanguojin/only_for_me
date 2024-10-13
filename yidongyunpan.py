@@ -14,6 +14,7 @@
 # 使用说明:
 #   - [抓包 Cookie：任意Authorization]
 #   - [注意事项: 简易方法，开抓包进App，搜refresh，找到authTokenRefresh.do ，请求头中的Authorization，响应体<token> xxx</token> 中xxx值（新版加密抓这个）]
+#   - [20241010更新注意事项: 简易方法，开抓包进App，搜refresh，找到authTokenRefresh.do ，请求头中的APP_AUTH，响应头中 NOTE_TOKEN值（新版加密抓这个）]
 # 环境变量设置:
 #   - 名称：[YDYP_COOKIE]   格式：[Authorization值@手机号@token值]
 #   - 多账号处理方式：[#或者&分割]
@@ -257,11 +258,13 @@ class YP:
     @catch_errors
     def get_personal_info(self, end=False):
         self.sleep()
+        self.singined = False
         info_url = 'https://caiyun.feixin.10086.cn/market/signin/page/info?client=app'
         info_data = self.send_request(info_url, headers = self.jwtHeaders, cookies = self.cookies).json()
         if info_data['msg'] == 'success':
             today_sign_in = info_data['result'].get('todaySignIn', True)
             total = info_data['result'].get('total', 0)
+
             if today_sign_in:
                 self.singined = True
             if not end:
@@ -911,7 +914,7 @@ if __name__ == "__main__":
 ✨ 抓包步骤：
     打开抓包工具
     打开{APP_NAME} APP
-    找{CK_URL} 请求头中的Authorization，响应体<token> xxx</token> 中xxx值（新版加密抓这个）]
+    找{CK_URL} 找到authTokenRefresh.do ，请求头中的APP_AUTH，响应头中 NOTE_TOKEN值
 ✨ 设置青龙变量：
     export {ENV_NAME}='{CK_NAME}'参数值，多账号#或&分割
     示例：export {CK_EX}
