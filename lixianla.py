@@ -178,3 +178,11 @@ if __name__ == '__main__':
                 Log(f"{ENV_NAME}变量填写格式错误，请检查")
             run_result = RUN(infos, index).main()
             if not run_result: continue
+    # 在LOAD_SEND中获取导入的send函数
+    send = LOAD_SEND()
+
+    # 判断send是否可用再进行调用
+    if send:
+        send(f'{APP_NAME}挂机通知【{SCRIPT_STATUS}】', send_msg)
+    else:
+        print('通知服务不可用')
