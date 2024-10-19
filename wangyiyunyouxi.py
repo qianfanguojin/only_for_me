@@ -5,8 +5,20 @@
 # @Author qianfanguojin
 # @Time 2024.09.28
 # -------------------------------
-# cron "15 8 * * *" script-path=xxx.py,tag=匹配cron用
+# cron "15 0 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('网易云游戏');
+# -------------------------------
+# ✨✨✨ {APP_NAME}签到✨✨✨
+# ✨ 功能：
+#     {APP_NAME}签到
+# ✨ 抓包步骤：
+#     打开电脑浏览器， F12 打开开发人员工具，选择网络（Network）
+#     打开{APP_NAME} PC 网页
+#     找 {CK_URL} 请求头中的Authorization
+# # 环境变量设置:
+# ✨ 设置青龙变量：
+#     export {ENV_NAMES[0]}='{CK_NAME}'参数值，多账号#或&分割
+# ✨✨✨ @Author qianfanguojin ✨✨✨
 
 import os
 import time
@@ -128,20 +140,6 @@ if __name__ == "__main__":
     CK_NAME = 'Authorization值'
     CK_EX = 'Basic ejxxxx'
     CK_URL = 'https://n.cg.163.com'
-    print(f'''
-✨✨✨ {APP_NAME}签到✨✨✨
-✨ 功能：
-    {APP_NAME}签到
-✨ 抓包步骤：
-    打开电脑浏览器， F12 打开开发人员工具，选择网络（Network）
-    打开{APP_NAME} PC 网页
-    找 {CK_URL} 请求头中的Authorization
-# 环境变量设置:
-✨ 设置青龙变量：
-    export {ENV_NAMES[0]}='{CK_NAME}'参数值，多账号#或&分割
-✨ 推荐cron：15 8 * * *
-✨✨✨ @Author qianfanguojin ✨✨✨
-''')
     if not IS_DEV:
         RANDOM_DELAY_RUN()
     local_script_name = os.path.basename(__file__)
