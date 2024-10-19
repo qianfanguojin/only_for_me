@@ -8,6 +8,23 @@
 # -------------------------------
 # cron "30 9 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('蜜雪冰城小程序')
+# -------------------------------
+APP_NAME = '蜜雪冰城小程序'
+ENV_NAME = 'MXBC_UNIONID'
+# ✨✨✨ 蜜雪冰城小程序签到✨✨✨
+# ✨ 功能：
+#     积分签到
+# ✨ 抓包步骤：
+#     打开抓包工具
+#     打开蜜雪冰城小程序
+#     授权登陆
+#     找 https://mxsa.mxbc.net/api/v1/app/loginByUnionid 的URl(如果已经授权登陆先退出登陆)
+#     复制里面的 unionid 参数值
+# ✨ 变量示例：
+#     export MXBC_UNIONID='o0GLxx'参数值，多账号#或&分割
+# ✨✨✨ @Author CHERWIN ✨✨✨
+# ✨✨✨ @Modify qianfanguojin ✨✨✨
+
 import json
 import base64
 import os
@@ -272,28 +289,6 @@ def ENV_SPLIT(input_str):
         return ([out_str])
 
 if __name__ == '__main__':
-    APP_NAME = '蜜雪冰城小程序'
-    ENV_NAME = 'MXBC_UNIONID'
-    CK_NAME = 'unionid'
-    CK_URL = 'https://mxsa.mxbc.net/api/v1/app/loginByUnionid'
-    print(f'''
-✨✨✨ {APP_NAME}签到✨✨✨
-✨ 功能：
-    积分签到
-✨ 抓包步骤：
-    打开抓包工具
-    打开{APP_NAME}
-    授权登陆
-    找{CK_URL}的URl(如果已经授权登陆先退出登陆)
-    复制里面的{CK_NAME}参数值
-    参数示例：o0GLKv7aPboGaxxxxxxxxxxxxxxx
-✨ 设置青龙变量：
-    export {ENV_NAME}='{CK_NAME}'参数值，多账号#或&分割
-✨ 注意：抓完CK没事儿别打开小程序，重新打开小程序请重新抓包
-✨ 推荐cron：30 9 * * *
-✨✨✨ @Author CHERWIN ✨✨✨
-✨✨✨ @Modify qianfanguojin ✨✨✨
-''')
     local_script_name = os.path.basename(__file__)
     local_version = '2024.09.01'
     # if IS_DEV:
@@ -313,7 +308,7 @@ if __name__ == '__main__':
     ENV = os.getenv('MXBC_UNIONID')
     token = ENV if ENV else token
     if not token:
-        print(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将{CK_NAME}填入token =''")
+        print(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将环境变量填入token =''")
         exit()
     tokens = ENV_SPLIT(token)
     # print(tokens)

@@ -5,13 +5,22 @@
 # @Author qianfanguojin
 # @Time 2024.09.01
 # -------------------------------
-# 软件名称：哈啰
-# 奖励：积攒奖励金可换手机话费重置抵用券
-# 抓包位置：首页 福利中心 查看更多 抓包 api.hellobike.com/api?urser 请求里面的 TOKEN
-# 定时 0 8 * * *
-# export HALUO_TOKEN="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 # cron "1 8 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('哈啰签到');
+# -------------------------------
+APP_NAME = '哈啰出行'
+ENV_NAME = 'HALUO_TOKEN'
+# ✨✨✨ 哈啰出行签到✨✨✨
+# ✨ 功能：
+#     哈啰出行 签到, 积攒奖励金可换手机话费重置抵用券
+# ✨ 抓包步骤：
+#     打开抓包工具
+#     打开 哈啰出行 APP/小程序 首页 福利中心 查看更多
+#     找 api.hellobike.com/api?urser 请求头中 TOKEN
+# ✨ 变量示例
+#     export HALUO_TOKEN='c10dxx'，多账号#或&分割
+# ✨✨✨ @Author qianfanguojin ✨✨✨
+
 import os
 import json
 import requests
@@ -273,33 +282,7 @@ class RUN:
             Log(f"！！！执行异常: {str(e)}")
             return False
 
-
-
-
-
-
-
-
 if __name__ == '__main__':
-    APP_NAME = '哈啰出行'
-    ENV_NAME = 'HALUO_TOKEN'
-    CK_NAME = 'token值'
-    CK_EX = 'ee7acxxxx'
-    CK_URL = 'api.hellobike.com/api?urser'
-    print(f'''
-✨✨✨ {APP_NAME} 签到✨✨✨
-✨ 功能：
-    {APP_NAME} 签到
-✨ 抓包步骤：
-    打开抓包工具
-    打开 {APP_NAME} APP/小程序
-    找 {CK_URL} 请求头中 {CK_NAME}
-✨ 设置青龙变量：
-    export {ENV_NAME}='{CK_NAME}'参数值，多账号#或&分割
-    示例：export {CK_EX}
-✨ 推荐cron：0 0 8 * * *
-✨✨✨ @Modify qianfanguojin ✨✨✨
-''')
     if not IS_DEV:
         RANDOM_DELAY_RUN()
     local_script_name = os.path.basename(__file__)
@@ -308,7 +291,7 @@ if __name__ == '__main__':
     ENV = os.getenv(ENV_NAME)
     token = ENV if ENV else token
     if not token:
-        Log(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将{CK_NAME}填入token =''")
+        Log(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将环境变量值填入token =''")
         exit()
     tokens = ENV_SPLIT(token)
 

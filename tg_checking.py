@@ -7,6 +7,16 @@
 # -------------------------------
 # cron "18 8 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('TG 签到');
+# -------------------------------
+APP_NAME = 'TG 签到'
+ENV_NAMES = ("TG_AUTH_INFO", "TG_PROXY")
+# ✨✨✨ TG 签到✨✨✨
+# ✨ 功能：
+#     TG 签到，用于各种机场，公益服务保号
+# ✨ 设置青龙变量：
+#     export TG_AUTH_INFO='appid@apihash@AuthString' 参数值，多账号#或&分割。
+#     export TG_PROXY='ip@port' 代理
+# ✨✨✨ @Author qianfanguojin ✨✨✨
 
 import os,sys
 import time
@@ -145,19 +155,6 @@ class RUN:
             Log(f"！！！执行异常: {str(e)}")
             return False
 if __name__ == "__main__":
-    APP_NAME = 'TG 签到'
-    ENV_NAMES = ("TG_AUTH_INFO", "TG_PROXY")
-    CK_NAMES = ('appid@apihash@AuthString','ip@port')
-    print(f'''
-✨✨✨ {APP_NAME}签到✨✨✨
-✨ 功能：
-    {APP_NAME}签到，用于各种机场，公益服务保号
-✨ 设置青龙变量：
-    export {ENV_NAMES[0]}='{CK_NAMES[0]}' 参数值，多账号#或&分割。
-    export {ENV_NAMES[1]}='{CK_NAMES[1]}' 代理
-✨ 推荐cron：0 23 1 * * *
-✨✨✨ @Author qianfanguojin ✨✨✨
-''')
     if not IS_DEV:
         RANDOM_DELAY_RUN()
 

@@ -8,18 +8,18 @@
 # cron "7 0 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('咪咕快游');
 # -------------------------------
-# ✨✨✨ {APP_NAME}签到✨✨✨
+APP_NAME = '咪咕快游'
+ENV_NAMES = ('MIGUKUAIYOU_COOKIES',)
+# ✨✨✨ 咪咕快游签到✨✨✨
 # ✨ 功能：
-#     {APP_NAME}签到
+#     咪咕快游签到
 # ✨ 抓包步骤：
-#     打开电脑浏览器，打开{APP_NAME} PC 网页
+#     打开电脑浏览器，打开咪咕快游PC 网页
 #     F12 打开开发人员工具，选择应用程序，本地存储，点击 {CK_URL} 项
 #     找到 cryptoSign cryptoUserId cryptoUserToken 三项对应的值
-#     组装为: {CK_EX}
-# ✨ 设置青龙变量：
-#     export {ENV_NAMES[0]}='{CK_NAME}'参数值，多账号#或&分割
-# ✨ 示例：
-#     export {ENV_NAMES[0]}='{CK_EX}'
+#     组装为: cryptoSign值@cryptoUserId值@cryptoUserToken值
+# ✨ 变量示例：
+#     export MIGUKUAIYOU_COOKIES='fed9xx@04fad981845xx@0467b88ec5dxx'，多账号#或&分割
 # ✨✨✨ @Author qianfanguojin ✨✨✨
 
 import os
@@ -204,11 +204,7 @@ class RUN:
             return False
 
 if __name__ == "__main__":
-    APP_NAME = '咪咕快游'
-    ENV_NAMES = ('MIGUKUAIYOU_COOKIES',)
-    CK_NAME = 'cryptoSign值@cryptoUserId值@cryptoUserToken值'
-    CK_EX = 'fed9xx@04fad981845xx@0467b88ec5dxx'
-    CK_URL = 'https://www.migufun.com/'
+
 
     if not IS_DEV:
         RANDOM_DELAY_RUN()

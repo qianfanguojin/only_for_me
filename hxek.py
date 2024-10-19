@@ -2,11 +2,27 @@
 # -- coding: utf-8 --
 # -------------------------------
 # 鸿星尔克
-# @Author qianfanguojin✨✨✨
+# @Author qianfanguojin
 # @Time 2024.09.01
 # -------------------------------
-# cron "5 11 * * *" script-path=xxx.py,tag=匹配cron用
+# cron "4 9 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('鸿星尔克官方会员中心小程序')
+# -------------------------------
+APP_NAME = '鸿星尔克官方会员中心小程序'
+ENV_NAME = 'HXEK_COOKIE'
+# ✨✨✨ 鸿星尔克签到✨✨✨
+# ✨功能：
+#     鸿星尔克积分签到
+# ✨抓包步骤：
+#     打开鸿星尔克
+#     授权登陆
+#     打开抓包工具
+#     找hope.demogic.com请求头中memberId以及enterpriseId
+# ✨设置青龙变量：
+#     export HXEK_COOKIE='ff80808xxxxxxxx@ff8080817xxxxxxx' 多账号#或&分割
+# ✨ ✨ 注意：抓完CK没事儿别打开小程序，重新打开小程序请重新抓包
+# ✨✨✨ @Author CHERWIN ✨✨✨
+# ✨✨✨ @Modify qianfanguojin ✨✨✨
 
 import os
 import random
@@ -258,46 +274,23 @@ def random_delay(min_delay=1, max_delay=5):
 
 
 if __name__ == '__main__':
-    APP_NAME = '鸿星尔克官方会员中心小程序'
-    ENV_NAME = 'HXEK_COOKIE'
-    CK_URL = 'hope.demogic.com请求头'
-    CK_NAME = 'memberId@enterpriseId'
-    CK_EX = 'ff80808xxxxxxxx@ff8080817xxxxxxx'
-    print(f'''
-✨✨✨ {APP_NAME}签到✨✨✨
-✨功能：
-    {APP_NAME}积分签到
-✨抓包步骤：
-    打开{APP_NAME}
-    授权登陆
-    打开抓包工具
-    找{CK_URL}{CK_NAME}
-    参数示例：{CK_EX}
-✨设置青龙变量：
-    export {ENV_NAME}='{CK_NAME}参数值'多账号#或&分割
-✨ ✨ 注意：抓完CK没事儿别打开小程序，重新打开小程序请重新抓包
-✨ 推荐cron：5 11 * * *
-✨✨✨ @Author CHERWIN ✨✨✨
-✨✨✨ @Modify qianfanguojin ✨✨✨
-''')
     local_script_name = os.path.basename(__file__)
     local_version = '2024.09.10'
     token = ''
     ENV = os.getenv(ENV_NAME)
     token = ENV if ENV else token
     if not token:
-        print(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将{CK_NAME}填入token =''")
+        print(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将环境变量填入token =''")
         exit()
     tokens = ENV_SPLIT(token)
     # print(tokens)
     if len(tokens) > 0:
-        print(f"\n>>>>>>>>>>共获取到{len(tokens)}个账号<<<<<<<<<<")
+        print(f"{APP_NAME}共获取到{len(tokens)}个账号")
         access_token = []
         for index, infos in enumerate(tokens):
             run_result = RUN(infos, index).main()
             if not run_result: continue
-        # if send: send(f'{APP_NAME}挂机通知', send_msg + TIPS_HTML)
-        # 在LOAD_SEND中获取导入的send函数
+
     send = LOAD_SEND()
 
     # 判断send是否可用再进行调用

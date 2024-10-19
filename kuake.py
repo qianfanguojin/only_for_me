@@ -9,6 +9,17 @@
 # -------------------------------
 # cron "0 0 2 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('夸克签到')
+# -------------------------------
+APP_NAME = '夸克网盘'
+ENV_NAME = 'QUARK_COOKIE'
+# ✨✨✨ 夸克网盘签到✨✨✨
+# ✨ 功能：
+#     夸克网盘签到，签到可获得容量
+# ✨ 抓包步骤：
+#
+# ✨ 变量示例
+#     export ENV_NAME='_UP_A4A_11_=wb9641d4d8a34b06933e7fc71e2c0cc8; _UP_D_=pc; _UP_Fxxx'，多账号#或&分割
+# ✨✨✨ @Author qianfanguojin ✨✨✨
 
 import requests
 import os
@@ -181,27 +192,13 @@ def Log(cont=''):
 
 
 if __name__ == '__main__':
-    APP_NAME = '夸克网盘'
-    ENV_NAME = 'QUARK_COOKIE'
-    CK_NAME = 'cookie'
-    CK_URL = 'https://pan.quark.cn/'
-    print(f'''
-✨✨✨ {APP_NAME}签到✨✨✨
-✨ 功能：
-    {APP_NAME}签到，签到可获得容量
-✨ 设置青龙变量：
-    export {ENV_NAME}='{CK_NAME}'参数值，多账号#或&分割
-    示例：export {ENV_NAME}='cookie1&cookie2'
-✨ 推荐cron：55 9 * * *
-✨✨✨ @Author qianfanguojin ✨✨✨
-''')
     local_script_name = os.path.basename(__file__)
     local_version = '2024.09.08'
     token = ''
     ENV = os.getenv(ENV_NAME)
     token = ENV if ENV else token
     if not token:
-        Log(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将{CK_NAME}填入token =''")
+        Log(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将环境变量填入token =''")
         exit()
     tokens = ENV_SPLIT(token)
     if len(tokens) > 0:

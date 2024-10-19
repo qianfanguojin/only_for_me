@@ -18,6 +18,19 @@
 # 环境变量设置:
 #   - 名称：[YDYP_COOKIE]   格式：[Authorization值@手机号@token值]
 #   - 多账号处理方式：[#或者&分割]
+APP_NAME = '中国移动云盘'
+ENV_NAME = 'YDYP_COOKIE'
+# ✨✨✨ 中国移动云盘✨✨✨
+# ✨ 功能：
+#     中国移动云盘签到 基础任务 果园 云朵大作战
+# ✨ 抓包步骤：
+#     打开抓包工具
+#     打开 中国移动云盘 APP
+#     找 https://aas.caiyun.feixin.10086.cn/tellin/authTokenRefresh.do 找到authTokenRefresh.do ，请求头中的APP_AUTH，响应头中 NOTE_TOKEN值
+# ✨ 设置青龙变量：
+#     export YDYP_COOKIE='Basic bwxxx@133xxx@ksxxx'参数值，多账号#或&分割
+# ✨✨✨ @Author 洋洋不瘦 ✨✨✨
+# ✨✨✨ @Modify qianfanguojin ✨✨✨
 
 import os
 import random
@@ -902,26 +915,6 @@ def Log(cont=''):
 
 
 if __name__ == "__main__":
-    APP_NAME = '中国移动云盘'
-    ENV_NAME = 'YDYP_COOKIE'
-    CK_NAME = 'Authorization值@手机号@token值'
-    CK_EX = 'Basic bwxxx@133xxx@ksxxx'
-    CK_URL = 'https://aas.caiyun.feixin.10086.cn/tellin/authTokenRefresh.do'
-    print(f'''
-✨✨✨ {APP_NAME}签到✨✨✨
-✨ 功能：
-    {APP_NAME}签到 基础任务 果园 云朵大作战
-✨ 抓包步骤：
-    打开抓包工具
-    打开{APP_NAME} APP
-    找{CK_URL} 找到authTokenRefresh.do ，请求头中的APP_AUTH，响应头中 NOTE_TOKEN值
-✨ 设置青龙变量：
-    export {ENV_NAME}='{CK_NAME}'参数值，多账号#或&分割
-    示例：export {CK_EX}
-✨ 推荐cron：0 0 8,16,20 * * *
-✨✨✨ @Author 洋洋不瘦 ✨✨✨
-✨✨✨ @Modify qianfanguojin ✨✨✨
-''')
     local_script_name = os.path.basename(__file__)
     local_version = '2024.09.09'
     token = ''

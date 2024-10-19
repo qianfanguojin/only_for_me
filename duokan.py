@@ -7,6 +7,19 @@
 # -------------------------------
 # cron "33 8 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('多看阅读');
+# -------------------------------=
+APP_NAME = '多看阅读'
+ENV_NAME = 'DUOKAN_COOKIE'
+# ✨✨✨ 多看阅读签到✨✨✨
+# ✨ 功能：
+#     多看阅读签到 基础任务 看广告 下载APP...
+# ✨ 抓包步骤：
+#     打开抓包工具
+#     打开多看阅读 APP
+#     找 https://www.duokan.com 请求头中的Cookie，复制粘贴即可
+# ✨ 变量示例：
+#     export DUOKAN_COOKIE='mi_version=V13.0.8.0.SKJCNXM; _m=1; platform=android; app_id=DuoKan; xxx'，多账号#或&分割
+# ✨✨✨ @Modify qianfanguojin ✨✨✨
 
 import time
 import os
@@ -567,36 +580,16 @@ class DuoKan:
         return msg_all
 
 if __name__ == "__main__":
-    APP_NAME = '多看阅读'
-    ENV_NAME = 'DUOKAN_COOKIE'
-    CK_NAME = 'cookie值'
-    CK_EX = 'mi_version=V13.0.8.0.SKJCNXM; _m=1; platform=android; app_id=DuoKan; xxx'
-    CK_URL = 'https://www.duokan.com'
-    print(f'''
-✨✨✨ {APP_NAME}签到✨✨✨
-✨ 功能：
-    {APP_NAME}签到 基础任务 看广告 下载APP...
-✨ 抓包步骤：
-    打开抓包工具
-    打开{APP_NAME} APP
-    找{CK_URL} 请求头中的Cookie，复制粘贴即可
-    示例：{CK_EX}
-✨ 设置青龙变量：
-    export {ENV_NAME}='{CK_NAME}'参数值，多账号#或&分割
-✨ 推荐cron：33 8 * * *
-✨✨✨ @Modify qianfanguojin ✨✨✨
-''')
     local_script_name = os.path.basename(__file__)
     local_version = '2024.09.11'
     token = ''
     ENV = os.getenv(ENV_NAME)
     token = ENV if ENV else token
     if not token:
-        Log(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将{CK_NAME}填入token =''")
+        Log(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将环境变量填入token =''")
         exit()
     tokens = ENV_SPLIT(token)
     for dc in tokens:
-        #print(dc)
         _check_items = [
             {
                 "cookie": dc

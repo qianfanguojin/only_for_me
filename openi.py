@@ -8,6 +8,19 @@
 # -------------------------------
 # cron "16 8 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('OpenI算力积分签到');
+# -------------------------------
+APP_NAME = 'OpenI 启智社区'
+ENV_NAME = 'OPENI_COOKIE'
+# ✨✨✨ OpenI 启智社区签到✨✨✨
+# ✨ 功能：
+#       OpenI 启智社区I算力积分签到，积分可用于兑换算力时间
+# ✨ 变量获取：
+#       打开 https://openi.pcl.ac.cn, 登录账号，按 F12 打开开发者工具，找到 https://openi.pcl.ac.cn/user/login 请求的用户名和密码
+#       新建一个仓库 repo，添加任意云脑任务，记录此 repo 名字
+#       组装为：用户名@密码@测试仓库名
+# ✨ 变量示例：
+#       export ENV_NAME='user@password@repo'参数值，多账号#或&分割
+# ✨✨✨ @Author qianfanguojin ✨✨✨
 
 import requests
 import re
@@ -330,27 +343,13 @@ def Log(cont=''):
 
 
 if __name__ == '__main__':
-    APP_NAME = 'OpenI 启智社区'
-    ENV_NAME = 'OPENI_COOKIE'
-    CK_NAME = '用户名@密码@测试仓库名'
-    CK_URL = 'https://openi.pcl.ac.cn/user/login'
-    print(f'''
-✨✨✨ {APP_NAME}签到✨✨✨
-✨ 功能：
-    {APP_NAME}AI算力积分签到，积分可用于兑换算力时间
-✨ 设置青龙变量：
-    export {ENV_NAME}='{CK_NAME}'参数值，多账号#或&分割
-    示例：export {ENV_NAME}='user1@password1@testrepo1&user2@password2@testrepo2'
-✨ 推荐cron：30 11 * * *
-✨✨✨ @Author qianfanguojin ✨✨✨
-''')
     local_script_name = os.path.basename(__file__)
     local_version = '2024.09.07'
     token = ''
     ENV = os.getenv('OPENI_COOKIE')
     token = ENV if ENV else token
     if not token:
-        Log(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将{CK_NAME}填入token =''")
+        Log(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将环境变量填入token =''")
         exit()
     tokens = ENV_SPLIT(token)
     if len(tokens) > 0:

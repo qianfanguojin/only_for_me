@@ -15,6 +15,18 @@
 
 # 电脑登录 https://lixianla.com/ ，打开开发者工具，复制任意请求的 cookie 值
 # 环境变量 LXL_COOKIE 设置为复制的 cookie 值
+# -------------------------------
+APP_NAME = '离线啦 Steam 账号共享论坛'
+ENV_NAME = 'LXL_COOKIE'
+# ✨✨✨ 离线啦 Steam 账号共享论坛签到✨✨✨
+# ✨ 功能：
+#     离线啦 Steam 账号共享论坛 签到获取经验、金币，可用于论坛权限帖子访问，账号分享可能需要积分才能查看
+# ✨ 变量获取：
+#     打开 https://lixianla.com/ , 登录账号，按 F12 打开开发者工具，复制任意请求的 cookie 值
+#     关键的 cookie 其实是 bbs_sid 和 bbs_token 两个值就可
+# ✨ 变量示例：
+#     export LXL_COOKIE='bbs_sid=meohxx; bbs_token=3XDeDhxx'，多账号#或&分割
+# ✨✨✨ @Author qianfanguojin ✨✨✨
 
 import os
 from bs4 import BeautifulSoup
@@ -150,30 +162,13 @@ class RUN:
             Log(f"！！！执行异常: {str(e)}")
             return False
 if __name__ == '__main__':
-    APP_NAME = '离线啦 Steam 账号共享论坛'
-    ENV_NAME = 'LXL_COOKIE'
-    CK_NAME = 'cookie 值'
-    CK_URL = 'https://lixianla.com/'
-    CK_EX = 'cookie = "bbs_sid=meohxx; bbs_token=3XDeDhxx'
-    print(f'''
-✨✨✨ {APP_NAME}签到✨✨✨
-✨ 功能：
-    {APP_NAME} 签到获取经验、金币，可用于论坛权限帖子访问，账号分享可能需要积分才能查看
-✨ 变量获取：
-    打开 {CK_URL}, 登录账号，按 F12 打开开发者工具，复制任意请求的 cookie 值
-    关键的 cookie 其实是 bbs_sid 和 bbs_token 两个值就可
-✨ 设置青龙变量：
-    export {ENV_NAME}='{CK_NAME}'参数值，多账号#或&分割
-✨ 推荐cron：30 11 * * *
-✨✨✨ @Author qianfanguojin ✨✨✨
-''')
     local_script_name = os.path.basename(__file__)
     local_version = '2024.09.15'
     token = ''
     ENV = os.getenv('LXL_COOKIE')
     token = ENV if ENV else token
     if not token:
-        Log(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将{CK_NAME}填入token =''")
+        Log(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将环境变量填入token =''")
         exit()
     tokens = ENV_SPLIT(token)
     if len(tokens) > 0:

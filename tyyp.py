@@ -7,6 +7,17 @@
 # -------------------------------
 # cron "23 8 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('天翼云盘签到');
+# -------------------------------
+APP_NAME = '天翼云盘'
+ENV_NAME = 'TYYP_COOKIE'
+# ✨✨✨ 天翼云盘签到抽奖✨✨✨
+# ✨ 功能：
+#       签到
+#       抽奖
+# ✨ 设置青龙变量：
+#       export TYYP_COOKIE='18888888888@123456'多账号#或&分割
+# ✨✨✨ @Author CHERWIN✨✨✨
+# ✨✨✨ @Modify qianfanguojin✨✨✨
 
 import base64
 import os
@@ -253,21 +264,6 @@ class RUN:
 
 
 if __name__ == '__main__':
-    APP_NAME = '天翼云盘'
-    ENV_NAME = 'TYYP_COOKIE'
-    CK_NAME = '手机号@密码'
-    print(f'''
-✨✨✨ {APP_NAME}签到抽奖✨✨✨
-✨ 功能：
-      签到
-      抽奖
-参数示例：18888888888@123456
-✨ 设置青龙变量：
-export {ENV_NAME}='{CK_NAME}参数值'多账号#或&分割
-✨ 推荐cron：0 9 * * *
-✨✨✨ @Author CHERWIN✨✨✨
-✨✨✨ @Modify qianfanguojin✨✨✨
-''')
     if not IS_DEV:
         RANDOM_DELAY_RUN()
     local_script_name = os.path.basename(__file__)
@@ -276,7 +272,7 @@ export {ENV_NAME}='{CK_NAME}参数值'多账号#或&分割
     ENV = os.getenv(ENV_NAME)
     token = ENV if ENV else token
     if not token:
-        print(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将{CK_NAME}填入token =''")
+        print(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将环境变量填入token =''")
         exit()
     tokens = ENV_SPLIT(token)
     if len(tokens) > 0:
