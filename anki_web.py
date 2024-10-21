@@ -8,12 +8,8 @@
 # cron "19 0 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('AnkiWeb 登录保活');
 # -------------------------------
-
-import urllib3
-from urllib3.exceptions import InsecureRequestWarning
 import traceback
 import requests
-urllib3.disable_warnings(InsecureRequestWarning)
 from script_tools import BaseRun
 import os
 
