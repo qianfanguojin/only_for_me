@@ -1,3 +1,14 @@
+# !/usr/bin/python3
+# -- coding: utf-8 --
+# -------------------------------
+# AnkiWeb 登录保活
+# @Author qianfanguojin
+# @Time 2024.10.21
+# -------------------------------
+# cron "19 0 * * *" script-path=xxx.py,tag=匹配cron用
+# const $ = new Env('AnkiWeb 登录保活');
+# -------------------------------
+
 import urllib3
 from urllib3.exceptions import InsecureRequestWarning
 import traceback
