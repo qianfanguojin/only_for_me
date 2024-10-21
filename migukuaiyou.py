@@ -14,15 +14,19 @@ ENV_NAMES = ('MIGUKUAIYOU_COOKIES',)
 # ✨ 功能：
 #     咪咕快游签到
 # ✨ 抓包步骤：
-#     打开电脑浏览器，打开咪咕快游PC 网页
-#     F12 打开开发人员工具，选择应用程序，本地存储，点击 {CK_URL} 项
-#     找到 cryptoSign cryptoUserId cryptoUserToken 三项对应的值
-#     组装为: cryptoSign值@cryptoUserId值@cryptoUserToken值
+#     1.    打开电脑浏览器，打开咪咕快游PC 网页
+#           F12 打开开发人员工具，选择应用程序，本地存储，点击 {CK_URL} 项
+#           找到 cryptoSign cryptoUserId cryptoUserToken 三项对应的值
+#     2.    打开咪咕快游手机 APP，打开抓包软件，进入 我的>电玩体验馆>签到
+#           观看一条广告视频，在 https://betagame.migufun.com/member/newSign/v1.0.7.7/reportLookAds 请求头中
+#           找到 mgHeaders 值
+#     最后组装为: cryptoSign值@cryptoUserId值@cryptoUserToken值@mgHeaders值
 # ✨ 变量示例：
-#     export MIGUKUAIYOU_COOKIES='fed9xx@04fad981845xx@0467b88ec5dxx'，多账号#或&分割
+#     export MIGUKUAIYOU_COOKIES='fed9xx@04fad981845xx@0467b88ec5dxx@7JZxSVYdvPxxx'，多账号#或&分割
 # ✨✨✨ @Author qianfanguojin ✨✨✨
 
 import os
+import random
 import time
 import urllib3
 from urllib3.exceptions import InsecureRequestWarning
@@ -137,6 +141,7 @@ class RUN:
         self.header_sign = split_info[0]
         self.user_id = split_info[1]
         self.user_token = split_info[2]
+        self.app_ad_mgheaders = split_info[3]
 
     def get_user_info(self):
         url = 'http://betagame.migufun.com/member/memberights/v1.0.1.5/queryMemberRightsAndTime'
@@ -146,11 +151,10 @@ class RUN:
             "headerSign": self.header_sign,
             "userId": self.user_id,
             "userToken": self.user_token,
-            "hgv": "5rPulhA0y",
-            "mgheaders": "FaDuFvJY3837NmqhLnp9+Uqqp3pFxW8/t1rCtoe1Lov90UuulRvWEeKnx+/aQjiFR7K2JiF3uNgUnhQgjK0Eh1hvYiUR+htf+u2gTj+3HnWwQWZU7ujIg9wDCDBXv/sFqvOpCrPlMOgtsruvd7aVkYT3T6+j4kWOaxuZcsxGo3M6n2mGY8Rd1NpNyNM4zEkd4ohIzsnZY4LPTqDyTW2aDLTlmX9cQbH9XExvDG+wdxFVf4VHNM/89PbEFI4PmJ/cqi8uV4EZ4kG/GnChzKa4q2oHT7S8k+yWIaw2oq3ro9O8LWHcdtbfOzR6hSN8RCkRtXd+IUh+Q6k6ka5qAJItiwZofzJfJURcGqcxd5fQYbSPZjb+o9PteWfk5V1A7oFP6JZoj46RyZd2WY5iEiw0mmPMeYqz8aXGmp08cFlROqhBEwYqeSHWDK5FU0whIajvgPuKpMT4ZU/4coRHxen9wOnT5Rp9aeUbZmhpT/BsAEcwzN4fwAtRV+AVMz6bDmM2b78n/qhtQlk/Vlxd7TEwxPmeyOTICqf4kAjAmi1+gsHM4ZLIu4WYHUwGTvKl1wWOD/Xfg7SQ7AeCi4mpGfWKp/EXtzSVu3AbhbgyqaWJaCntwIn/VRzg7iazvO/+5RPB/uAEtjnVb1iZaVLlfuyHCZCPPrSvOS2b94dHPD0IuYpschTSZZOL0V4v2otmaZ9GelzacvGLSm5VCKFHSuTvURYw4/U1/jKDkq7mXLxa4t+QYoZx6SplMJSMZ+xN7yDW/61SDHLKO+KIeyNGMp4zdTSUvmEYuev72yjROB/WjpfVBBLibCcv51mGWgpJRTSuCxAc4Q1Q7ir1NTwpPtnv7UDfs87c8QLvskRiNRDOE7PFEGIhxB5tigaq4WITlLSHGmwnyaVg4jJrgbISa8/PPd5d04A+6WO24X5424AgMQKPL+uzJF4SMCHImAumVYY/f9ziT4yvYsqN2QfqB+GCSTz64x2Ct2idxTXwSCZS1mNRFZOgxzOXfeF/RLwYZxnWaIxZ/oqNitdNBBz91g72sFggYYJvRM3JoNRWgS/570gT6lzM4fqUaTyQsIe3ziy1FYnES2kuXtNh9ioRGmTp/+taNNJdGSvq3n2NJ3P53R9tEVLrrJXAo3H2Gact3YvdF6HIi4L0gZwfXYqhzglKTdpF0MbZrjWUJw8PFpUG4HAL3sDQ6vFqWi2+2UnVYNpg7hj0T6bJMUG9dqC8MZxSmUFjrmJdxlGwThqVJRcOjBS42MF7OdODzX+XcoA5Sd/9yU3O83h4JxTFS8hmcYpndlF1ZRdty8V4exqzCirCZXtqg21rEe2IMmCa6XSVfP2lNIXS76v7XDfbIlOD7G4Wf0ZooZktRBlqKYWgSRHwb+5/++NPOMZPktdb+agr+Zkf/PE2GZ2z++m2ZthhtadmvmVfVi3XEB/0za8078jxR+3MqPQ2bTq98ZHO5mBk+dWqrFk/sHooRQsa4JB1QlLiDQ=="
+            "hgv": "5rPulhA0y"
         }
-        # msgheaders = Crypt.encrypt_data(json.dumps(header))
-        # header.update({"msgheaders": msgheaders})
+        msgheaders = Crypt.encrypt_data(json.dumps(header,separators=(',', ':')))
+        header.update({"mgheaders": msgheaders})
         data = '{"needPop":0,"gameId": null}'
         res = self.s.post(url=url, headers=header, data=Crypt.encrypt_data(data))
         res_json = json.loads(Crypt.decrypt_data(res.text))
@@ -179,13 +183,34 @@ class RUN:
             sign_days = res_json['resultData']['totalSignDays']
             query_month = res_json['resultData']['queryMonth']
             if res_json['resultData']['popResp']['popFlag'] == 0:
-                Log(f"ℹ️ 今日已签到，{query_month} 已连续签到 {sign_days} 天")
+                Log(f"ℹ️  今日已签到，{query_month} 已连续签到 {sign_days} 天")
                 return True
             Log(f"✅ 签到成功, {query_month} 已连续签到 {sign_days} 天")
             return True
         else:
             Change_status("异常")
             return False
+
+    def watch_video(self):
+        url = "http://betagame.migufun.com/member/newSign/v1.0.7.7/reportLookAds"
+        payload = "tE0gx3d9Iud/Svs4RmXivQ=="
+        headers = {
+            'User-Agent': "okhttp/3.9.1",
+            'Connection': "Keep-Alive",
+            'Accept-Encoding': "gzip",
+            'mgHeaders': self.app_ad_mgheaders,
+            'Content-Type': "application/json; charset=utf-8"
+        }
+        #由于无法解析观看结果，默认是四条广告视频，所以循环四次，多次观看不叠加
+        for i in range(1, 5):
+            time.sleep(random.randint(1, 3))
+            response = requests.post(url, data=payload, headers=headers)
+            if response.status_code == 200:
+                Log(f"✅ 观看广告视频 {i} 成功")
+                continue
+            else:
+                Log(f"❌ 观看视频 {i+1} 失败")
+
     def main(self):
         try:
             Log(f"\n=======\t开始执行第 {self.index} 个账号")
@@ -195,6 +220,8 @@ class RUN:
             self.get_user_info()
             Log(f"\n==>💥 签到")
             self.sign()
+            Log(f"\n==>📺️ 看广告视频")
+            self.watch_video()
             Log(f"\n==>🧑 读取用户信息")
             self.get_user_info()
             Log(f"\n=======\t第 {self.index} 个账号执行完毕")
