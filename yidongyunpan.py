@@ -99,7 +99,7 @@ class YP:
         self.notebook_id = None
         self.note_token = None
         self.note_auth = None
-        self.click_num = 15  # 定义抽奖次数和摇一摇戳一戳次数
+        self.click_num = 30  # 定义抽奖次数和摇一摇戳一戳次数
         self.draw = 1  # 抽奖次数，首次免费
         self.session = requests.Session()
 
@@ -141,27 +141,28 @@ class YP:
     @catch_errors
     def run(self):
         if self.jwt():
+            self.share()
             self.get_personal_info()
-            print('\n==>💥 签到')
+            Log('\n==>💥 签到')
             self.signin()
-            print('\n==>🎁 点击任务')
+            Log('\n==>🎁 点击任务')
             self.click()
             # 任务
-            print('\n==>📌 云盘任务')
+            Log('\n==>📌 云盘任务')
             self.get_tasklist(url = 'sign_in_3', app_type = 'cloud_app')
-            print(f'\n==>☁️ 云朵大作战')
+            Log(f'\n==>☁️ 云朵大作战')
             self.cloud_game()
-            print(f'\n==>🌳 果园任务')
+            Log(f'\n==>🌳 果园任务')
             self.fruitLogin()
-            print(f'\n==>📰 公众号任务')
+            Log(f'\n==>📰 公众号任务')
             self.wxsign()
-            print(f'\n==>🕹 摇一摇抽奖')
+            Log(f'\n==>🕹 摇一摇抽奖')
             self.shake()
             self.surplus_num()
-            print(f'\n==>🔥 热门任务')
+            Log(f'\n==>🔥 热门任务')
             self.backup_cloud()
             self.open_send()
-            print(f'\n==>📧 139邮箱任务')
+            Log(f'\n==>📧 139邮箱任务')
             self.get_tasklist(url = 'newsign_139mail', app_type = 'email_app')
             self.receive()
             self.get_personal_info(end=True)
@@ -255,7 +256,7 @@ class YP:
         signin_data = self.send_request(signin_url, headers = self.jwtHeaders,
                                                 cookies = self.cookies).json()
         if self.singined:
-            print('✅已签到过了')
+            Log('✅已签到过了')
         else:
             print('❌ 未签到')
             signin_url = 'https://caiyun.feixin.10086.cn/market/manager/commonMarketconfig/getByMarketRuleName?marketName=sign_in_3'
@@ -263,7 +264,7 @@ class YP:
                                             cookies = self.cookies).json()
 
             if signin_data['msg'] == 'success':
-                print('✅签到成功')
+                Log('✅签到成功')
             else:
                 print(signin_data['msg'])
                 self.log_info(signin_data['msg'])
@@ -300,11 +301,11 @@ class YP:
                 time.sleep(0.2)
 
                 if 'result' in return_data:
-                    print(f'✅{return_data["result"]}')
+                    Log(f'✅{return_data["result"]}')
                     successful_click += 1
 
             if successful_click == 0:
-                print(f'❌未获得 x {self.click_num}')
+                Log(f'❌未获得 x {self.click_num}')
         except Exception as e:
             print(f'错误信息:{e}')
 
@@ -353,7 +354,7 @@ class YP:
                     continue
                 if app_type == 'cloud_app':
                     if task_type == "month":
-                        print('\n📆 云盘每月任务')
+                        Log('📆 云盘每月任务')
                         for month in tasks:
                             task_id = month.get('id')
                             if task_id in [110, 113, 417, 409]:
@@ -362,13 +363,13 @@ class YP:
                             task_status = month.get('state', '')
 
                             if task_status == 'FINISH':
-                                print(f'已完成: {task_name}')
+                                Log(f'已完成: {task_name}')
                                 continue
                             print(f'去完成: {task_name}')
                             self.do_task(task_id, task_type = 'month', app_type = 'cloud_app')
                             time.sleep(2)
                     elif task_type == "day":
-                        print('\n📆 云盘每日任务')
+                        Log('📆 云盘每日任务')
                         for day in tasks:
                             task_id = day.get('id')
                             if task_id == 404:
@@ -377,7 +378,7 @@ class YP:
                             task_status = day.get('state', '')
 
                             if task_status == 'FINISH':
-                                print(f'已完成: {task_name}')
+                                Log(f'已完成: {task_name}')
                                 continue
                             print(f'去完成: {task_name}')
                             self.do_task(task_id, task_type = 'day', app_type = 'cloud_app')
@@ -392,9 +393,9 @@ class YP:
                                 continue
 
                             if task_status == 'FINISH':
-                                print(f'已完成: {task_name}')
+                                Log(f'已完成: {task_name}')
                                 continue
-                            print(f'去完成: {task_name}')
+                            Log(f'去完成: {task_name}')
                             self.do_task(task_id, task_type = 'month', app_type = 'email_app')
                             time.sleep(2)
         except Exception as e:
@@ -581,10 +582,10 @@ class YP:
         return_data = self.send_request(url, headers = self.jwtHeaders, cookies = self.cookies).json()
 
         if return_data['msg'] != 'success':
-            return print(return_data['msg'])
+            return Log(return_data['msg'])
         if not return_data['result'].get('todaySignIn'):
-            return print('❌签到失败,可能未绑定公众号')
-        return print('✅签到成功')
+            return Log('❌签到失败,可能未绑定公众号')
+        return Log('✅签到成功')
 
     # 摇一摇
     def shake(self):
@@ -599,7 +600,7 @@ class YP:
                 shake_prize_config = return_data["result"].get("shakePrizeconfig")
 
                 if shake_prize_config:
-                    print(f"🎉摇一摇获得: {shake_prize_config['name']}")
+                    Log(f"🎉摇一摇获得: {shake_prize_config['name']}")
                     successful_shakes += 1
         except Exception as e:
             print(f'错误信息: {e}')
@@ -617,7 +618,7 @@ class YP:
 
         if draw_info_data.get('msg') == 'success':
             remain_num = draw_info_data['result'].get('surplusNumber', 0)
-            print(f'剩余抽奖次数{remain_num}')
+            Log(f'剩余抽奖次数{remain_num}')
             if remain_num > 50 - self.draw:
                 for _ in range(self.draw):
                     self.sleep()
@@ -657,7 +658,7 @@ class YP:
             do_login_url = f'{self.fruit_url}login/userinfo.do'
             doLoginData = self.send_request(do_login_url, headers = self.treeHeaders).json()
             if doLoginData.get('result', {}).get('islogin') != 1:
-                return print('❌果园登录失败')
+                return Log('❌果园登录失败')
             # 去做果园任务
             self.fruitTask()
         else:
@@ -672,22 +673,22 @@ class YP:
         if check_sign_data.get('success'):
             today_checkin = check_sign_data.get('result', {}).get('todayCheckin', 0)
             if today_checkin == 1:
-                print('果园今日已签到')
+                Log('ℹ️果园今日已签到')
             else:
                 checkin_data = self.send_request(f'{self.fruit_url}task/checkin.do',
                                                  headers = self.treeHeaders).json()
                 if checkin_data.get('result', {}).get('code', '') == 1:
-                    print('果园签到成功')
+                    Log('✅果园签到成功')
                 self.sleep()
                 water_data = self.send_request(f'{self.fruit_url}user/clickCartoon.do?cartoonType=widget',
                                                headers = self.treeHeaders).json()
                 color_data = self.send_request(f'{self.fruit_url}user/clickCartoon.do?cartoonType=color',
                                                headers = self.treeHeaders).json()
                 given_water = water_data.get('result', {}).get('given', 0)
-                print(f'领取每日水滴: {given_water}')
-                print(f'每日雨滴:{color_data.get("result").get("msg")}')
+                Log(f'领取每日水滴: {given_water}')
+                Log(f'每日雨滴:{color_data.get("result").get("msg")}')
         else:
-            print('果园签到查询失败:', check_sign_data.get('msg', ''))
+            Log('果园签到查询失败:', check_sign_data.get('msg', ''))
 
         # 获取任务列表
         task_list_data = self.send_request(f'{self.fruit_url}task/taskList.do?clientType=PE',
@@ -708,7 +709,7 @@ class YP:
                 (state.get('taskState', 0) for state in task_state_result if state.get('taskId') == task_id), 0)
 
             if task_state == 2:
-                print(f'已完成: {task_name}')
+                Log(f'已完成: {task_name}')
             else:
                 self.do_fruit_task(task_name, task_id, water_num)
 
@@ -745,12 +746,12 @@ class YP:
         else:
             collect_water = treeinfo_data.get('result', {}).get('collectWater', 0)
             tree_level = treeinfo_data.get('result', {}).get('treeLevel', 0)
-            print(f'当前小树等级: {tree_level} 剩余水滴: {collect_water}')
+            Log(f'当前小树等级: {tree_level} 剩余水滴: {collect_water}')
             if tree_level in (2, 4, 6, 8):
                 # 开宝箱
                 openbox_url = f'{self.fruit_url}prize/openBox.do'
                 openbox_data = self.send_request(openbox_url, headers = self.treeHeaders).json()
-                print(f'- {openbox_data.get("result").get("msg")}')
+                Log(f'- {openbox_data.get("result").get("msg")}')
 
             watering_amount = collect_water // 20  # 计算需要浇水的次数
             watering_url = f'{self.fruit_url}user/watering.do?isFast=0'
@@ -758,10 +759,10 @@ class YP:
                 for _ in range(watering_amount):
                     watering_data = self.send_request(watering_url, headers = self.treeHeaders).json()
                     if watering_data.get('success'):
-                        print('✔️ 浇水成功')
+                        Log('✔️ 浇水成功')
                         time.sleep(3)
             else:
-                print('水滴不足!')
+                Log('水滴不足!')
 
     # 云朵大作战
     @catch_errors
@@ -818,16 +819,16 @@ class YP:
         backup_data = self.send_request(backup_url, headers = self.jwtHeaders).json()
         state = backup_data.get('result', {}).get('state', '')
         if state == -1:
-            print('本月未备份,暂无连续备份奖励')
+            Log('本月未备份,暂无连续备份奖励')
 
         elif state == 0:
-            print('领取本月连续备份奖励')
+            Log('领取本月连续备份奖励')
             cur_url = 'https://caiyun.feixin.10086.cn/market/backupgift/receive'
             cur_data = self.send_request(cur_url, headers = self.jwtHeaders).json()
             print(f'获得云朵数量:{cur_data.get("result").get("result")}')
 
         elif state == 1:
-            print('已领取本月连续备份奖励')
+            Log('已领取本月连续备份奖励')
         self.sleep()
         expend_url = 'https://caiyun.feixin.10086.cn/market/signin/page/taskExpansion'  # 每月膨胀云朵
         expend_data = self.send_request(expend_url, headers = self.jwtHeaders, cookies = self.cookies).json()
@@ -839,13 +840,13 @@ class YP:
         acceptDate = expend_data.get('result', {}).get('acceptDate', '')  # 月份
 
         if curMonthBackup:
-            print(f'本月已备份，下月可领取膨胀云朵: {nextMonthTaskRecordCount}')
+            Log(f'本月已备份，下月可领取膨胀云朵: {nextMonthTaskRecordCount}')
         else:
-            print('本月还未备份，下月暂无膨胀云朵')
+            Log('本月还未备份，下月暂无膨胀云朵')
 
         if preMonthBackup:
             if curMonthBackupTaskAccept:
-                print('上月已备份，膨胀云朵已领取')
+                Log('上月已备份，膨胀云朵已领取')
             else:
                 # 领取
                 receive_url = f'https://caiyun.feixin.10086.cn/market/signin/page/receiveTaskExpansion?acceptDate={acceptDate}'
@@ -857,10 +858,7 @@ class YP:
                     cloudCount = receive_data.get('result', {}).get('cloudCount', '')
                     print(f'膨胀云朵领取成功: {cloudCount}朵')
         else:
-            print('上月未备份，本月无膨胀云朵领取')
-
-    # #  开启备份
-    # def open_backup(self):
+            Log('上月未备份，本月无膨胀云朵领取')
 
     # 通知云朵
     @catch_errors
@@ -892,9 +890,9 @@ class YP:
                                                  method = "POST").json()
                 print(reward2_data.get('result', {}).get('description', ''))
 
-            print(f'通知已开启天数: {onDuaration}, 满31天可领取奖励')
+            Log(f'通知已开启天数: {onDuaration}, 满31天可领取奖励')
         else:
-            print('通知权限未开启')
+            Log('通知权限未开启')
 
 send_msg = ''
 one_msg=''
@@ -921,7 +919,7 @@ if __name__ == "__main__":
     ENV = os.getenv(ENV_NAME)
     token = ENV if ENV else token
     if not token:
-        Log(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将{CK_NAME}填入token =''")
+        Log(f"未填写{ENV_NAME}变量\n青龙可在环境变量设置 {ENV_NAME} 或者在本脚本文件上方将环境变量值填入token =''")
         exit()
     tokens = ENV_SPLIT(token)
 
@@ -930,14 +928,13 @@ if __name__ == "__main__":
     for i, account_info in enumerate(tokens, start = 1):
         Log(f"\n======== ▷ 第 {i} 个账号 ◁ ========")
         YP(account_info).run()
-        print("\n随机等待5-10s进行下一个账号")
         time.sleep(random.randint(5, 10))
 
     # 输出异常账号信息
-    if err_accounts != '':
-        print(f"\n失效账号:\n{err_accounts}")
-    else:
-        print('当前所有账号ck有效')
+    # if err_accounts != '':
+    #     print(f"\n失效账号:\n{err_accounts}")
+    # else:
+    #     print('当前所有账号ck有效')
     if err_message != '':
         #print(f'-错误信息: \n{err_message}')
         Change_status("异常")
