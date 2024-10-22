@@ -76,16 +76,18 @@ class BaseRun(ABC):
         def __init__(self):
             self.notify_message = ""
             self.status = self.ScriptStatus.SUCCESS
-        def print(self, one_message):
+        def print(self, one_message, append_line=True):
             if one_message:
-                self.notify_message += f"{one_message}\n"
                 print(f"{one_message}")
+                if append_line:
+                    self.notify_message += f"{one_message}\n"
         def info(self, one_message):
             self.print(one_message)
         def error(self, one_message):
             self.status = self.ScriptStatus.FAILURE
             self.print(one_message)
-
+        def debug(self, one_message):
+            self.print(f"| DEBUG | - {one_message}", append_line=False)
 
         def get_notify_message(self):
             return self.notify_message
