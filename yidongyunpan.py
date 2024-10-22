@@ -141,7 +141,6 @@ class YP:
     @catch_errors
     def run(self):
         if self.jwt():
-            self.share()
             self.get_personal_info()
             Log('\n==>💥 签到')
             self.signin()
