@@ -221,7 +221,7 @@ class Run(BaseRun):
             return True
         else:
             self.logger.debug(res_body)
-            self.logger.info(f"ℹ️  {res_body.get("errmsgcn")}")
+            self.logger.info(f"ℹ️  {res_body.get('errmsgcn')}")
             return False
     #看广告
     def watch_ad(self):
