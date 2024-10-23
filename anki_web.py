@@ -4,6 +4,14 @@
 # AnkiWeb 登录保活
 # @Author qianfanguojin
 # @Time 2024.10.21
+# @Description
+# ✨ 功能：
+#       定时登录网页，维持账号不被删除
+# ✨ 抓包步骤：
+#       无需抓包，使用登录 Ankiweb 的账号(邮箱) email 以及密码 password
+#       最后组装为: email;password
+# ✨ 变量示例：
+#     export ANKIWEB_CREDENTIALS='1234@qq.com;123456'，多账号#或&分割
 # -------------------------------
 # cron "19 0 * * *" script-path=xxx.py,tag=匹配cron用
 # const $ = new Env('AnkiWeb 登录保活');
@@ -16,11 +24,11 @@ import os
 class Run(BaseRun):
 
     def init_vars(self):
-        self.headers = {
-            "Content-Type": "application/octet-stream"
-        }
         self.base_url = "https://ankiweb.net/"
         self.session = requests.Session()
+        self.session.headers = {
+            "Content-Type": "application/octet-stream"
+        } 
     def process_var(self, info):
         username, password = info.split(";")
         text = f"{username}{password}".encode()
