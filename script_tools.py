@@ -21,19 +21,8 @@ class BaseRun(ABC):
     class ScriptTool:
         @staticmethod
         def env_split(env_str):
-            parts = []
-            if '&' in env_str:
-                amp_parts = env_str.split('&')
-                for part in amp_parts:
-                    if '#' in part:
-                        hash_parts = part.split('#')
-                        for hash_part in hash_parts:
-                            parts.append(hash_part)
-                    else:
-                        parts.append(part)
-                return (parts)
-            elif '#' in env_str:
-                hash_parts = env_str.split('#')
+            if '\n' in env_str:
+                hash_parts = env_str.split('\n')
                 return (hash_parts)
             else:
                 out_str = str(env_str)
@@ -118,10 +107,10 @@ class BaseRun(ABC):
             if len(app_envs) > 0:
                 self.app_env_infos = app_envs
     # 模板方法，定义算法的框架
-    def main(self):
+    def main(self, notify=True):
         if not self.tools.dev():
             self.tools.random_delay_run()
         self.get_envinfo()
         self.init_vars()
         self.process()
-        self.notify()
+        if notify: self.notify()
