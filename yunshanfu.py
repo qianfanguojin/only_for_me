@@ -17,7 +17,7 @@
 #     export YSF_CREDENTIALS='A&ejxxx&...__tokenat=12321321; _tracker_distinct_id_=123231; canvasId=xzxx%20Object%5D...&...__tokenat=12321321; _tracker_distinct_id_=123231; canvasId=xzxx%20Object%5D...'，多账号换行分割
 # -------------------------------
 # cron "59 12 9 * * *" script-path=xxx.py,tag=匹配cron用
-# const $ = new Env('云闪付签到');
+# const $ = new Env('云闪付 APP');
 # -------------------------------
 import traceback
 import requests
