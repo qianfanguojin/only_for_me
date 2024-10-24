@@ -1,12 +1,12 @@
 # !/usr/bin/python3
 # -- coding: utf-8 --
 # -------------------------------
-# 云闪付签到
+# 云闪付 APP
 # @Author qianfanguojin
 # @Time 2024.10.21
 # @Description
 # ✨ 功能：
-#       云闪付签到, 获取积分
+#       云闪付 APP 签到,做任务 获取积分
 # ✨ 抓包步骤：
 #       抓包云闪付 APP
 #       导航栏 我的 进入签到页面，搜索域名 https://youhui.95516.com/ 获取请求头中的 Authorization 和 Cookie（CookieA）
@@ -208,7 +208,7 @@ class Run(BaseRun):
                 return False
 
 if __name__ == "__main__":
-    app_name = "云闪付签到"
+    app_name = "云闪付 APP"
     app_env_name = "YSF_CREDENTIALS"
     local_script_name = os.path.basename(__file__)
     local_version = '2024.10.24'
