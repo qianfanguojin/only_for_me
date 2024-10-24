@@ -129,7 +129,7 @@ class Run(BaseRun):
             self.logger.error(f"❌ 签到失败，原因：{result.text}")
             return False
         if not data.get("repeated") and data.get("signedIn"):
-            self.logger.info(f'✅ 签到成功, 目前连续签到天数为{data["signInDays"]["days"]}, 这个月连续签到天数：{data['signInDays']['current']['days']}')
+            self.logger.info(f'✅ 签到成功, 目前连续签到天数为{data["signInDays"]["days"]}, 这个月连续签到天数：{data["signInDays"]["current"]["days"]}')
         else:
             self.logger.info(f'ℹ️  已经签到过了, 目前连续签到天数：{data["signInDays"]["days"]}, 这个月连续签到天数：{data["signInDays"]["current"]["days"]}')
         return True
